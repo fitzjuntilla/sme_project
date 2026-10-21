@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Computers</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                M
+            </div>
+
+            <div>
+
+                <h2>MILA</h2>
+
+                <span>
+                    Internet Cafe
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+
+            <!-- DASHBOARD -->
+
+            <a href="{{ url_for('dashboard.dashboard') }}"
+               class="nav-item">
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <!-- COMPUTERS -->
+
+            <a href="{{ url_for('computers.computers') }}"
+               class="nav-item active">
+
+                <span>▦</span>
+
+                Computers
+
+            </a>
+
+
+            <!-- CUSTOMERS -->
+
+            <a href="{{ url_for('customers.customers') }}"
+               class="nav-item">
+
+                <span>♙</span>
+
+                Customers
+
+            </a>
+
+
+            <!-- SERVICES -->
+
+            <a href="{{ url_for('services.services') }}"
+               class="nav-item">
+
+                <span>▤</span>
+
+                Services
+
+            </a>
+
+
+            <!-- INVENTORY -->
+
+            <a href="{{ url_for('inventory.inventory') }}"
+               class="nav-item">
+
+                <span>▥</span>
+
+                Inventory
+
+            </a>
+
+
+            <!-- TRANSACTIONS -->
+
+            <a href="{{ url_for('transactions.transactions') }}"
+               class="nav-item">
+
+                <span>₱</span>
+
+                Transactions
+
+            </a>
+
+
+            <!-- OWNER ONLY -->
+
+            {% if role == 'Owner' %}
+
+
+                <!-- REPORTS -->
+
+                <a href="{{ url_for('reports.reports') }}"
+                   class="nav-item">
+
+                    <span>▧</span>
+
+                    Reports
+
+                </a>
+
+
+                <!-- MANAGE STAFF -->
+
+                <a href="{{ url_for('staff.staff') }}"
+                   class="nav-item">
+
+                    <span>♙</span>
+
+                    Manage Staff
+
+                </a>
+
+
+            {% endif %}
+
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout">
+
+                <span>↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ==========================================
+             TOP BAR
+             ========================================== -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="page-label">
+                    COMPUTER MANAGEMENT
+                </p>
+
+                <h1>
+                    Computers
+                </h1>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="avatar">
+                    {{ full_name[0] | upper }}
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ full_name }}
+                    </strong>
+
+                    <span>
+                        {{ role }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==========================================
+             WELCOME
+             ========================================== -->
+
+        <section class="welcome">
+
+            <div>
+
+                <h2>
+                    Computer Stations
+                </h2>
+
+                <p>
+                    Manage computer availability and customer sessions.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             COMPUTER CARDS
+             ========================================== -->
+
+        <section class="computer-management-grid">
+
+
+            {% for computer in computers %}
+
+
+                <div class="
+                    computer-management-card
+
+                    {% if computer.status == 'Available' %}
+
+                        available
+
+                    {% elif computer.status == 'Occupied' %}
+
+                        occupied
+
+                    {% else %}
+
+                        maintenance
+
+                    {% endif %}
+                ">
+
+
+                    <!-- ==========================================
+                         COMPUTER HEADER
+                         ========================================== -->
+
+                    <div class="computer-management-header">
+
+
+                        <div class="pc-icon">
+                            PC
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+                                {{ computer.computer_number }}
+                            </h3>
+
+                            <p>
+                                {{ computer.computer_name }}
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ==========================================
+                         STATUS
+                         ========================================== -->
+
+                    <div class="computer-status">
+
+                        <span class="status-indicator"></span>
+
+                        {{ computer.status }}
+
+                    </div>
+
+
+
+                    <!-- ==========================================
+                         HOURLY RATE
+                         ========================================== -->
+
+                    <div class="computer-rate">
+
+                        ₱{{ "%.2f"|format(computer.hourly_rate) }}
+
+                        / hour
+
+                    </div>
+
+
+
+                    <!-- ==========================================
+                         AVAILABLE COMPUTER
+                         ========================================== -->
+
+                    {% if computer.status == 'Available' %}
+
+
+                        <form
+                            action="{{ url_for('computers.start_session') }}"
+                            method="POST">
+
+
+                            <!-- COMPUTER ID -->
+
+                            <input
+                                type="hidden"
+                                name="computer_id"
+                                value="{{ computer.computer_id }}">
+
+
+
+                            <!-- ==========================================
+                                 CUSTOMER
+                                 ========================================== -->
+
+                            <label>
+                                Customer
+                            </label>
+
+
+                            <select
+                                name="customer_id"
+                                required>
+
+                                <option value="">
+                                    Select customer
+                                </option>
+
+
+                                {% for customer in customers %}
+
+                                    <option
+                                        value="{{ customer.customer_id }}">
+
+                                        {{ customer.customer_name }}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+
+
+                            <!-- ==========================================
+                                 DURATION
+                                 ========================================== -->
+
+                            <label>
+                                Duration
+                            </label>
+
+
+                            <select
+                                name="allocated_minutes"
+                                class="duration-select"
+                                required
+                                data-hourly-rate="{{ computer.hourly_rate }}"
+                                onchange="updatePrice(this)">
+
+
+                                <!-- TEST OPTION -->
+
+                                <option value="4">
+
+                                    4 minutes
+
+                                </option>
+
+
+                                <!-- NORMAL OPTIONS -->
+
+                                <option value="10">
+
+                                    10 minutes
+
+                                </option>
+
+
+                                <option value="15">
+
+                                    15 minutes
+
+                                </option>
+
+
+                                <option value="30">
+
+                                    30 minutes
+
+                                </option>
+
+
+                                <option value="60">
+
+                                    1 hour
+
+                                </option>
+
+
+                                <option value="90">
+
+                                    1 hour 30 minutes
+
+                                </option>
+
+
+                                <option value="120">
+
+                                    2 hours
+
+                                </option>
+
+
+                                <option value="150">
+
+                                    2 hours 30 minutes
+
+                                </option>
+
+
+                                <option value="180">
+
+                                    3 hours
+
+                                </option>
+
+
+                                <option value="240">
+
+                                    4 hours
+
+                                </option>
+
+
+                            </select>
+
+
+
+                            <!-- ==========================================
+                                 ESTIMATED PRICE
+                                 ========================================== -->
+
+                            <div class="estimated-price">
+
+                                <span>
+                                    Estimated Total
+                                </span>
+
+
+                                <strong class="price-value">
+
+                                    ₱{{ "%.2f"|format(
+                                        (computer.hourly_rate * 4 / 60)
+                                    ) }}
+
+                                </strong>
+
+                            </div>
+
+
+
+                            <!-- ==========================================
+                                 START SESSION
+                                 ========================================== -->
+
+                            <button
+                                type="submit"
+                                class="start-button">
+
+                                Start Session
+
+                            </button>
+
+
+                        </form>
+
+
+
+                    <!-- ==========================================
+                         OCCUPIED COMPUTER
+                         ========================================== -->
+
+                    {% elif computer.status == 'Occupied' %}
+
+
+                        <div class="active-session">
+
+
+                            <!-- CUSTOMER -->
+
+                            <p>
+
+                                <strong>
+                                    Customer
+                                </strong>
+
+                            </p>
+
+
+                            <p>
+
+                                {{ computer.customer_name or
+                                   'Walk-in Customer' }}
+
+                            </p>
+
+
+
+                            <!-- START TIME -->
+
+                            {% if computer.start_time %}
+
+                                <p class="session-time">
+
+                                    Started:
+
+                                    {{ computer.start_time.strftime(
+                                        '%b %d, %Y %I:%M %p'
+                                    ) }}
+
+                                </p>
+
+                            {% endif %}
+
+
+
+                            <!-- ALLOCATED TIME -->
+
+                            {% if computer.allocated_minutes %}
+
+                                <p class="session-time">
+
+                                    Reserved:
+
+                                    {{ computer.allocated_minutes }}
+
+                                    minutes
+
+                                </p>
+
+                            {% endif %}
+
+
+
+                            <!-- ==========================================
+                                 OCCUPIED UNTIL
+                                 ========================================== -->
+
+                            {% if computer.occupied_until %}
+
+                                <p class="session-time occupied-until-display">
+
+                                    Occupied until:
+
+                                    <strong>
+
+                                        {{ computer.occupied_until.strftime(
+                                            '%I:%M %p'
+                                        ) }}
+
+                                    </strong>
+
+                                </p>
+
+                            {% endif %}
+
+
+
+                            <!-- ==========================================
+                                 EXTEND TIME
+                                 ========================================== -->
+
+                            <form
+                                action="{{ url_for(
+                                    'computers.extend_session',
+                                    session_id=computer.session_id
+                                ) }}"
+                                method="POST">
+
+
+                                <label>
+                                    Extend Time
+                                </label>
+
+
+                                <select
+                                    name="extra_minutes"
+                                    required>
+
+
+                                    <option value="4">
+
+                                        +4 minutes
+
+                                    </option>
+
+
+                                    <option value="10">
+
+                                        +10 minutes
+
+                                    </option>
+
+
+                                    <option value="30">
+
+                                        +30 minutes
+
+                                    </option>
+
+
+                                    <option value="60">
+
+                                        +1 hour
+
+                                    </option>
+
+
+                                    <option value="90">
+
+                                        +1 hour 30 minutes
+
+                                    </option>
+
+
+                                    <option value="120">
+
+                                        +2 hours
+
+                                    </option>
+
+
+                                </select>
+
+
+                                <button
+                                    type="submit"
+                                    class="extend-button">
+
+                                    Extend Time
+
+                                </button>
+
+
+                            </form>
+
+
+
+                            <!-- ==========================================
+                                 END SESSION
+                                 ========================================== -->
+
+                            <form
+                                action="{{ url_for(
+                                    'computers.end_session',
+                                    session_id=computer.session_id
+                                ) }}"
+                                method="POST">
+
+
+                                <button
+                                    type="submit"
+                                    class="end-button">
+
+                                    End Session
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+
+                    <!-- ==========================================
+                         MAINTENANCE
+                         ========================================== -->
+
+                    {% else %}
+
+
+                        <div class="maintenance-message">
+
+                            Computer under maintenance.
+
+                        </div>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ==========================================
+         PRICE CALCULATOR
+         ========================================== -->
+
+    <script>
+
+        function updatePrice(select) {
+
+            const minutes =
+                parseInt(select.value);
+
+            const hourlyRate =
+                parseFloat(
+                    select.dataset.hourlyRate
+                );
+
+
+            const price =
+                (minutes / 60) * hourlyRate;
+
+
+            const form =
+                select.closest("form");
+
+
+            const priceElement =
+                form.querySelector(
+                    ".price-value"
+                );
+
+
+            if (priceElement) {
+
+                priceElement.textContent =
+                    "₱" + price.toFixed(2);
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // INITIAL PRICE
+        // ==========================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                document
+                    .querySelectorAll(
+                        ".duration-select"
+                    )
+                    .forEach(function (select) {
+
+                        updatePrice(select);
+
+                    });
+
+            }
+        );
+
+
+
+        // ==========================================
+        // AUTOMATIC SESSION EXPIRATION CHECK
+        // ==========================================
+
+        // Check every 5 seconds.
+        //
+        // This is intentionally short for testing
+        // the 4-minute session.
+        //
+        // After an expired session is detected,
+        // the page will reload automatically.
+
+        setInterval(function () {
+
+            fetch("/computers/check-expired")
+
+                .then(function (response) {
+
+                    return response.json();
+
+                })
+
+                .then(function (data) {
+
+                    if (
+                        data.success &&
+                        data.expired > 0
+                    ) {
+
+                        location.reload();
+
+                    }
+
+                })
+
+                .catch(function (error) {
+
+                    console.log(
+                        "Session check error:",
+                        error
+                    );
+
+                });
+
+        }, 5000);
+
+    </script>
+
+
+</body>
+
+</html>

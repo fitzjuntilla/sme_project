@@ -1,0 +1,1089 @@
+:root {
+    --bg: #0F172A;
+    --bg-soft: #111c2d;
+    --panel: rgba(15, 23, 42, 0.96);
+    --panel-alt: rgba(18, 29, 49, 0.96);
+    --primary: #0F172A;
+    --primary-deep: #0a1220;
+    --secondary: #10B981;
+    --secondary-soft: rgba(16, 185, 129, 0.12);
+    --accent: #34d399;
+    --success: #10B981;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, 0.12);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, 0.12);
+    --text: #E2E8F0;
+    --muted: #94A3B8;
+    --line: rgba(226, 232, 240, 0.12);
+    --shadow: 0 22px 50px rgba(2, 6, 23, 0.45);
+    --radius-lg: 24px;
+    --radius-md: 18px;
+}
+
+body {
+    font-family: "Poppins", "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    background:
+        radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 18%),
+        radial-gradient(circle at right, rgba(148, 163, 184, 0.10), transparent 22%),
+        linear-gradient(135deg, #0B1220 0%, #0F172A 26%, #111C2D 100%);
+    color: var(--text);
+}
+
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(17, 28, 45, 0.98) 100%);
+    border-right: 1px solid var(--line);
+    box-shadow: 18px 0 30px rgba(2, 6, 23, 0.32);
+}
+
+.brand {
+    padding: 28px 24px 22px;
+    border-bottom: 1px solid var(--line);
+}
+
+.brand-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.35);
+    color: #0F172A;
+}
+
+.brand h2 {
+    color: #E2E8F0;
+    letter-spacing: 0.09em;
+    font-size: 1.9rem;
+}
+
+.brand span {
+    color: rgba(226,232,240,0.75);
+    font-size: 0.72rem;
+}
+
+.nav-item {
+    padding: 11px 14px;
+    border-radius: 12px;
+    color: rgba(226,232,240,0.82);
+    font-weight: 600;
+    font-size: 0.87rem;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(52,211,153,0.12));
+    color: #0F172A;
+    transform: translateX(2px);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    color: #0F172A;
+    box-shadow: 0 14px 24px rgba(16,185,129,0.35);
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.navigation {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 8px 12px 16px;
+    border-top: 1px solid rgba(226, 232, 240, 0.12);
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    color: rgba(226,232,240,0.8);
+    font-weight: 600;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    transform: translateY(-2px);
+}
+
+.logout:hover {
+    background: linear-gradient(135deg, rgba(16,185,129,0.22), rgba(52,211,153,0.14));
+    color: #0F172A;
+    border: 1px solid rgba(16,185,129,0.25);
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 30px 34px 40px;
+}
+
+.topbar {
+    height: 92px;
+    padding: 16px 20px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: rgba(15, 23, 42, 0.94);
+    box-shadow: var(--shadow);
+}
+
+.page-label {
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.topbar h1 {
+    font-size: 2.1rem;
+    line-height: 1.2;
+    color: #E2E8F0;
+}
+
+.user-profile {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(226,232,240,0.02));
+    border: 1px solid rgba(16,185,129,0.2);
+}
+
+.user-info strong {
+    font-size: 0.92rem;
+}
+
+.user-info span {
+    font-size: 0.72rem;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    color: #0F172A;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.28);
+}
+
+.user-info strong {
+    color: var(--text);
+}
+
+.user-info span {
+    color: var(--muted);
+}
+
+.welcome {
+    padding: 26px 0 18px;
+}
+
+.welcome h2 {
+    font-size: 2rem;
+    color: #f5f7fb;
+}
+
+.welcome p {
+    color: var(--muted);
+    font-size: 0.94rem;
+}
+
+.stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.stat-card {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(17, 28, 45, 0.96) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 22px 20px;
+    box-shadow: 0 16px 26px rgba(2, 6, 23, 0.28);
+}
+
+.stat-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+}
+
+.computers-icon {
+    background: rgba(105, 140, 212, 0.12);
+    color: #9bb6ff;
+}
+
+.available-icon {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.occupied-icon {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.session-icon {
+    background: rgba(162, 135, 255, 0.12);
+    color: #bfadff;
+}
+
+.stat-card p {
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    color: #f5f7fb;
+}
+
+.panel {
+    background: linear-gradient(180deg, rgba(17, 27, 35, 0.96) 0%, rgba(15, 23, 32, 0.96) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+.panel:hover,
+.stat-card:hover,
+.computer-management-card:hover,
+.computer-card:hover,
+.transaction-summary-card:hover,
+.customer-panel:hover,
+.transaction-panel:hover,
+.service-panel:hover,
+.inventory-panel:hover,
+.staff-panel:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.panel-label,
+.panel-description,
+.stock-item span,
+.computer-card p,
+.computer-bottom,
+.user-info span,
+.no-alert p {
+    color: rgba(226, 232, 240, 0.76);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.panel-header h2 {
+    font-size: 1.2rem;
+}
+
+.customer-modal-content,
+.staff-modal-content {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(17, 28, 45, 0.98) 100%) !important;
+    border: 1px solid rgba(226, 232, 240, 0.12) !important;
+    box-shadow: 0 20px 45px rgba(2, 6, 23, 0.42) !important;
+}
+
+.customer-modal-header h2,
+.staff-modal-header h2 {
+    color: #E2E8F0 !important;
+}
+
+.sales-value {
+    font-size: 2.2rem;
+}
+
+.stock-item strong {
+    font-size: 0.92rem;
+}
+
+.computer-top strong {
+    font-size: 0.98rem;
+}
+
+.money-icon {
+    background: rgba(16,185,129,0.12);
+    color: var(--secondary);
+}
+
+.warning-icon {
+    background: rgba(16,185,129,0.12);
+    color: var(--secondary);
+}
+
+.sales-value {
+    font-size: 34px;
+    color: #E2E8F0;
+}
+
+.stock-item {
+    background: rgba(226,232,240,0.02);
+    border: 1px solid var(--line);
+}
+
+.stock-number {
+    color: var(--secondary);
+}
+
+.no-alert {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    color: #d7f9ee;
+}
+
+.computer-card {
+    background: rgba(226,232,240,0.02);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.computer-top strong {
+    color: #E2E8F0;
+}
+
+.sidebar .nav-item,
+.sidebar-bottom .logout {
+    color: rgba(226, 232, 240, 0.78);
+}
+
+.sidebar .nav-item:hover {
+    color: #0F172A;
+}
+
+.sidebar-bottom .logout {
+    background: rgba(16, 185, 129, 0.06);
+    border: 1px solid rgba(16, 185, 129, 0.12);
+    color: #d7f9ee;
+}
+
+.sidebar-bottom .logout:hover {
+    background: linear-gradient(135deg, rgba(16,185,129,0.22), rgba(52,211,153,0.14));
+    color: #0F172A;
+    border: 1px solid rgba(16,185,129,0.25);
+}
+
+.computer-management-grid {
+    gap: 18px;
+}
+
+.computer-management-card {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(17, 28, 45, 0.96) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    border-top: 4px solid rgba(16, 185, 129, 0.9);
+    box-shadow: 0 18px 35px rgba(2, 6, 23, 0.30);
+    color: var(--text);
+}
+
+.computer-management-card.available {
+    border-top-color: #10B981;
+}
+
+.computer-management-card.occupied {
+    border-top-color: #10B981;
+}
+
+.computer-management-card.maintenance {
+    border-top-color: #10B981;
+}
+
+.computer-management-header h3 {
+    color: #E2E8F0;
+    font-size: 1.1rem;
+}
+
+.computer-management-header p {
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+.computer-status {
+    color: #E2E8F0;
+    font-size: 0.76rem;
+}
+
+.computer-rate {
+    color: #34d399;
+    font-size: 0.78rem;
+}
+
+.computer-management-card label {
+    color: #E2E8F0;
+    font-size: 0.75rem;
+}
+
+.computer-management-card select,
+.computer-management-card input {
+    background: rgba(226, 232, 240, 0.03);
+    border: 1px solid rgba(226, 232, 240, 0.08);
+    color: var(--text);
+}
+
+.computer-management-card select:focus {
+    border-color: rgba(16, 185, 129, 0.7);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+
+select,
+input,
+textarea,
+option {
+    color-scheme: dark;
+    background-color: #0F172A !important;
+    color: #E2E8F0 !important;
+}
+
+select,
+input,
+textarea {
+    border: 1px solid rgba(226, 232, 240, 0.12) !important;
+    background-image: none !important;
+}
+
+select option,
+select optgroup {
+    background: #0F172A !important;
+    color: #E2E8F0 !important;
+}
+
+body,
+.sidebar,
+.main-content,
+.topbar,
+.panel,
+.stat-card,
+.stock-item,
+.computer-card,
+.computer-management-card,
+.active-session,
+.maintenance-message,
+.estimated-price,
+.card,
+.table-card,
+.info-box,
+.summary-box,
+.search-box,
+.filter-panel,
+.form-card,
+.content-card,
+.detail-card,
+.report-box,
+.service-item,
+.transaction-card,
+.inventory-card,
+.customer-card,
+.staff-card,
+.form-group input,
+.form-group textarea,
+.form-group select,
+.customer-form-group input,
+.customer-form-group select,
+.staff-form-group input,
+.staff-form-group select,
+.search-input,
+.transaction-search input,
+.customer-search input,
+.service-search input,
+.inventory-search input,
+.report-period-content select,
+.report-form select,
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+textarea,
+select,
+.customer-panel,
+.customer-modal-content,
+.customer-table,
+.customer-table-container,
+.customer-search,
+.transaction-panel,
+.transaction-table,
+.transaction-table-container,
+.transaction-summary-card,
+.transaction-search,
+.transaction-date-filter,
+.service-panel,
+.inventory-panel,
+.report-transactions-panel,
+.staff-panel {
+    background: #0F172A !important;
+    border-color: rgba(226, 232, 240, 0.12) !important;
+    color: #E2E8F0 !important;
+}
+
+.estimated-price {
+    background: rgba(217, 167, 103, 0.08);
+    border: 1px solid rgba(217, 167, 103, 0.14);
+    color: #dfe8f3;
+}
+
+.estimated-price strong {
+    color: #f0bf75;
+}
+
+.customer-panel,
+.customer-modal-content,
+.customer-table,
+.customer-table-container,
+.customer-search,
+.transaction-panel,
+.transaction-table,
+.transaction-table-container,
+.transaction-summary-card,
+.transaction-search,
+.transaction-date-filter,
+.service-panel,
+.inventory-panel,
+.report-transactions-panel,
+.staff-panel {
+    background: #101c2a !important;
+    color: #f4f7fb !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.customer-table thead,
+.transaction-table thead {
+    background: rgba(217, 167, 103, 0.08) !important;
+}
+
+.customer-table th,
+.customer-table td,
+.customer-table tbody tr:hover,
+.transaction-table th,
+.transaction-table td,
+.transaction-table tbody tr:hover,
+.customer-name-cell strong,
+.customer-id,
+.transaction-amount,
+.customer-panel-header h2,
+.transaction-panel-header h2,
+.customer-modal-header h2,
+.customer-search input,
+.transaction-search input,
+.customer-search span,
+.transaction-search span,
+.customer-form-group label,
+.customer-form-group input,
+.customer-footer,
+.transaction-footer,
+.empty-customers,
+.empty-transactions,
+.modal-close,
+.transaction-summary-card p,
+.transaction-summary-card h3,
+.transaction-summary-card .transaction-summary-icon {
+    color: #f4f7fb !important;
+}
+
+.customer-search input::placeholder,
+.transaction-search input::placeholder {
+    color: rgba(244, 247, 251, 0.7) !important;
+}
+
+.start-button,
+.extend-button,
+.end-button {
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.start-button {
+    background: linear-gradient(135deg, #10B981 0%, #34d399 100%);
+    color: #0F172A;
+}
+
+.extend-button {
+    background: linear-gradient(135deg, #10B981 0%, #34d399 100%);
+    color: #0F172A;
+}
+
+.end-button {
+    background: linear-gradient(135deg, #10B981 0%, #34d399 100%);
+    color: #0F172A;
+}
+
+.active-session {
+    background: rgba(227, 120, 103, 0.08);
+    border: 1px solid rgba(227, 120, 103, 0.18);
+    color: #f4f7fb;
+}
+
+.active-session p,
+.session-time,
+.maintenance-message {
+    color: #dfe8f3;
+}
+
+.maintenance-message {
+    background: rgba(240, 182, 82, 0.08);
+    border: 1px solid rgba(240, 182, 82, 0.15);
+    color: #f3d9a0;
+}
+
+.login-container {
+    background:
+        radial-gradient(circle at top left, rgba(16,185,129,0.16), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(148, 163, 184, 0.12), transparent 20%),
+        linear-gradient(135deg, #0B1220 0%, #0F172A 45%, #111C2D 100%);
+}
+
+.login-card {
+    width: min(100%, 430px);
+    background: rgba(15,23,42,0.92);
+    padding: 38px 30px 30px;
+    border-radius: 28px;
+    border: 1px solid rgba(16,185,129,0.15);
+    box-shadow: 0 28px 60px rgba(2,6,23,0.35);
+}
+
+.login-card h1 {
+    color: #E2E8F0;
+    font-size: 2.2rem;
+}
+
+.login-subtitle {
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+}
+
+.form-group label {
+    color: #E2E8F0;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    border: 1px solid rgba(226,232,240,0.08);
+    border-radius: 12px;
+    background: rgba(15,23,42,0.72);
+    color: var(--text);
+    font-size: 0.97rem;
+    padding: 14px;
+}
+
+.form-group input:focus {
+    border-color: rgba(217,167,103,0.6);
+    box-shadow: 0 0 0 4px rgba(217,167,103,0.12);
+    background: rgba(255,255,255,0.04);
+}
+
+.login-card button {
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    color: #101c2a;
+    box-shadow: 0 18px 30px rgba(217,167,103,0.25);
+}
+
+button,
+input[type="submit"],
+input[type="button"],
+button[type="submit"],
+.start-button,
+.extend-button,
+.end-button,
+.save-customer-button,
+.add-service-button,
+.save-service-button,
+.add-inventory-button,
+.save-inventory-button,
+.add-staff-button,
+.save-staff-button,
+.edit-customer-button,
+.edit-service-button,
+.edit-inventory-button,
+.edit-staff-button,
+.delete-customer-button,
+.delete-service-button,
+.delete-inventory-button,
+.delete-staff-button {
+    background: linear-gradient(135deg, #10B981 0%, #34d399 100%) !important;
+    color: #0F172A !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
+    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.22) !important;
+    font-weight: 700 !important;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button[type="submit"]:hover,
+.start-button:hover,
+.extend-button:hover,
+.end-button:hover,
+.add-customer-button:hover,
+.save-customer-button:hover,
+.add-service-button:hover,
+.save-service-button:hover,
+.add-inventory-button:hover,
+.save-inventory-button:hover,
+.add-staff-button:hover,
+.save-staff-button:hover,
+.edit-customer-button:hover,
+.edit-service-button:hover,
+.edit-inventory-button:hover,
+.edit-staff-button:hover,
+.delete-customer-button:hover,
+.delete-service-button:hover,
+.delete-inventory-button:hover,
+.delete-staff-button:hover {
+    background: linear-gradient(135deg, #0ea572 0%, #2ad39c 100%) !important;
+    color: #0F172A !important;
+    transform: translateY(-1px);
+}
+
+.login-card button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 20px 35px rgba(217,167,103,0.3);
+}
+
+.staff-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.staff-modal.show {
+    display: flex !important;
+}
+
+.staff-modal-content {
+    width: 420px;
+    max-width: 90%;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.staff-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.staff-modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #222222;
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    color: #888888;
+    width: 32px;
+    height: 32px;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #333333;
+}
+
+.error-message {
+    background: rgba(227, 120, 103, 0.08);
+    border: 1px solid rgba(227,120,103,0.18);
+    border-radius: 12px;
+    color: #ffd9d2;
+}
+
+html,
+body,
+.sidebar,
+.main-content,
+.topbar,
+.brand,
+.panel,
+.stat-card,
+.computer-panel,
+.computer-card,
+.computer-management-card,
+.customer-panel,
+.customer-modal-content,
+.customer-table,
+.customer-table-container,
+.customer-search,
+.customer-form-group input,
+.customer-form-group select,
+.transaction-panel,
+.transaction-table,
+.transaction-table-container,
+.transaction-summary-card,
+.transaction-search,
+.transaction-date-filter,
+.service-panel,
+.inventory-panel,
+.report-transactions-panel,
+.staff-panel,
+.form-group input,
+.form-group select,
+.form-group textarea,
+input,
+select,
+textarea,
+option,
+button,
+.search-box,
+.filter-panel,
+.info-box,
+.summary-box,
+.content-card,
+.detail-card,
+.report-box,
+.service-item,
+.transaction-card,
+.inventory-card,
+.customer-card,
+.staff-card {
+    background: #0F172A !important;
+    border-color: rgba(226, 232, 240, 0.12) !important;
+    color: #E2E8F0 !important;
+}
+
+th,
+td,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+strong,
+span,
+a,
+::placeholder,
+.option {
+    color: #E2E8F0 !important;
+}
+
+::placeholder {
+    opacity: 0.75;
+}
+
+.customer-table thead,
+.transaction-table thead,
+.service-table thead,
+.inventory-table thead,
+.report-table thead {
+    background: rgba(16, 185, 129, 0.10) !important;
+}
+
+.customer-table tbody tr:hover,
+.transaction-table tbody tr:hover,
+.service-table tbody tr:hover,
+.inventory-table tbody tr:hover,
+.report-table tbody tr:hover {
+    background: rgba(16, 185, 129, 0.06) !important;
+}
+
+.service-panel,
+.inventory-panel,
+.report-transactions-panel,
+.staff-panel,
+.report-period-card,
+.service-search,
+.inventory-search,
+.report-period-content select,
+.custom-report-date,
+.service-table,
+.inventory-table,
+.report-table,
+.service-table-container,
+.inventory-table-container,
+.report-table-container,
+.staff-table,
+.staff-panel-header,
+.service-panel-header,
+.inventory-panel-header,
+.service-search input,
+.inventory-search input,
+.report-item,
+.report-item strong,
+.report-item span,
+.report-status,
+.service-table th,
+.service-table td,
+.inventory-table th,
+.inventory-table td,
+.report-table th,
+.report-table td,
+.staff-panel-header h2,
+.staff-table th,
+.staff-table td,
+.add-service-button,
+.add-inventory-button,
+.add-staff-button,
+.save-service-button,
+.save-inventory-button,
+.cancel-button,
+.save-customer-button,
+.edit-service-button,
+.delete-service-button,
+.edit-inventory-button,
+.delete-inventory-button,
+.edit-staff-button,
+.delete-staff-button,
+.report-item div,
+.report-item strong,
+.report-item span,
+.report-status.paid,
+.report-status.pending,
+.report-status.cancelled,
+.service-status.available,
+.service-status.unavailable,
+.inventory-status.available,
+.inventory-status.low-stock,
+.inventory-status.out-of-stock {
+    background: #0F172A !important;
+    border-color: rgba(226, 232, 240, 0.12) !important;
+    color: #E2E8F0 !important;
+}
+
+.service-search input::placeholder,
+.inventory-search input::placeholder,
+.report-period-content p,
+.service-footer,
+.inventory-footer,
+.empty-services,
+.empty-inventory,
+.empty-report,
+.report-item span,
+.report-table td,
+.service-table td,
+.inventory-table td,
+.service-table th,
+.inventory-table th,
+.report-table th,
+.staff-panel-header h2,
+.report-status {
+    color: #E2E8F0 !important;
+}
+
+.staff-panel,
+.staff-panel-header,
+.staff-table-container,
+.staff-table,
+.staff-table thead,
+.staff-table th,
+.staff-table td,
+.staff-table tbody tr:hover,
+.staff-table td strong,
+.staff-name-cell,
+.staff-avatar,
+.staff-id,
+.staff-role,
+.staff-role.owner,
+.staff-role.attendant,
+.staff-footer,
+.staff-footer strong,
+.empty-staff,
+.staff-modal,
+.staff-modal-content,
+.staff-modal-header,
+.staff-modal-header h2,
+.modal-close,
+.staff-form-group,
+.staff-form-group label,
+.staff-form-group input,
+.staff-form-group input::placeholder,
+.modal-actions,
+.cancel-button,
+.save-staff-button,
+.activate-staff-button,
+.deactivate-staff-button,
+.staff-status,
+.staff-status.active,
+.staff-status.inactive {
+    background: #0F172A !important;
+    color: #E2E8F0 !important;
+    border-color: rgba(226, 232, 240, 0.12) !important;
+}
+
+.staff-table thead {
+    background: rgba(16, 185, 129, 0.10) !important;
+}
+
+.staff-table tbody tr:hover {
+    background: rgba(16, 185, 129, 0.06) !important;
+}
+
+.staff-role.owner,
+.staff-role.attendant,
+.staff-status.active,
+.staff-status.inactive,
+.owner-protected-label,
+.deactivate-staff-button,
+.activate-staff-button {
+    border: 1px solid rgba(16, 185, 129, 0.18) !important;
+}
+
+.staff-role.owner,
+.staff-role.attendant {
+    background: rgba(16, 185, 129, 0.12) !important;
+    color: #d7f9ee !important;
+}
+
+.staff-status.active {
+    background: rgba(16, 185, 129, 0.14) !important;
+    color: #d7f9ee !important;
+}
+
+.staff-status.inactive {
+    background: rgba(248, 113, 113, 0.10) !important;
+    color: #fecaca !important;
+}
+
+.owner-protected-label {
+    background: rgba(16, 185, 129, 0.10) !important;
+    color: #d7f9ee !important;
+}
+
+.deactivate-staff-button,
+.activate-staff-button {
+    background: rgba(16, 185, 129, 0.14) !important;
+    color: #d7f9ee !important;
+}
+
+.staff-avatar {
+    background: linear-gradient(135deg, #10B981 0%, #34d399 100%) !important;
+    color: #0F172A !important;
+}
+
+.service-status.available,
+.service-status.unavailable,
+.inventory-status.available,
+.inventory-status.low-stock,
+.inventory-status.out-of-stock,
+.report-status.paid,
+.report-status.pending,
+.report-status.cancelled {
+    background: rgba(16, 185, 129, 0.12) !important;
+    border: 1px solid rgba(16, 185, 129, 0.18) !important;
+}

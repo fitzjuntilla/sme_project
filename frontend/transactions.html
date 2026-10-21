@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Transactions</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                M
+            </div>
+
+            <div>
+
+                <h2>MILA</h2>
+
+                <span>
+                    Internet Cafe
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+
+            <!-- DASHBOARD -->
+
+            <a
+                href="{{ url_for('dashboard.dashboard') }}"
+                class="nav-item">
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <!-- COMPUTERS -->
+
+            <a
+                href="{{ url_for('computers.computers') }}"
+                class="nav-item">
+
+                <span>▦</span>
+
+                Computers
+
+            </a>
+
+
+            <!-- CUSTOMERS -->
+
+            <a
+                href="{{ url_for('customers.customers') }}"
+                class="nav-item">
+
+                <span>♙</span>
+
+                Customers
+
+            </a>
+
+
+            <!-- SERVICES -->
+
+            <a
+                href="{{ url_for('services.services') }}"
+                class="nav-item">
+
+                <span>▤</span>
+
+                Services
+
+            </a>
+
+
+            <!-- INVENTORY -->
+
+            <a
+                href="{{ url_for('inventory.inventory') }}"
+                class="nav-item">
+
+                <span>▥</span>
+
+                Inventory
+
+            </a>
+
+
+            <!-- TRANSACTIONS -->
+
+            <a
+                href="{{ url_for('transactions.transactions') }}"
+                class="nav-item active">
+
+                <span>₱</span>
+
+                Transactions
+
+            </a>
+
+
+            <!-- OWNER ONLY -->
+
+            {% if role == 'Owner' %}
+
+
+                <!-- REPORTS -->
+
+                <a
+                    href="{{ url_for('reports.reports') }}"
+                    class="nav-item">
+
+                    <span>▧</span>
+
+                    Reports
+
+                </a>
+
+
+                <!-- MANAGE STAFF -->
+
+                <a
+                    href="{{ url_for('staff.staff') }}"
+                    class="nav-item">
+
+                    <span>♙</span>
+
+                    Manage Staff
+
+                </a>
+
+
+            {% endif %}
+
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{{ url_for('auth.logout') }}"
+                class="logout">
+
+                <span>↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ==========================================
+             TOP BAR
+             ========================================== -->
+
+        <header class="topbar">
+
+
+            <div>
+
+                <p class="page-label">
+                    TRANSACTION MANAGEMENT
+                </p>
+
+                <h1>
+                    Transactions
+                </h1>
+
+            </div>
+
+
+            <!-- USER PROFILE -->
+
+            <div class="user-profile">
+
+
+                <div class="avatar">
+
+                    {{ full_name[0] | upper }}
+
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ full_name }}
+                    </strong>
+
+                    <span>
+                        {{ role }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- ==========================================
+             PAGE INTRO
+             ========================================== -->
+
+        <section class="welcome">
+
+            <div>
+
+                <h2>
+                    Transaction Records
+                </h2>
+
+                <p>
+                    View completed computer sessions and payments.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             SALES SUMMARY
+             ========================================== -->
+
+        <section class="transaction-summary-grid">
+
+
+            <!-- TODAY'S SALES -->
+
+            <div class="transaction-summary-card">
+
+
+                <div class="transaction-summary-icon">
+
+                    ₱
+
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Today's Sales
+                    </p>
+
+
+                    <h3>
+
+                        ₱{{ "%.2f"|format(
+                            sales_summary.total_sales
+                        ) }}
+
+                    </h3>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- COMPLETED TRANSACTIONS -->
+
+            <div class="transaction-summary-card">
+
+
+                <div class="transaction-summary-icon">
+
+                    #
+
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Completed Transactions
+                    </p>
+
+
+                    <h3>
+
+                        {{ sales_summary.total_transactions }}
+
+                    </h3>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- AVERAGE SALE -->
+
+            <div class="transaction-summary-card">
+
+
+                <div class="transaction-summary-icon">
+
+                    ₱
+
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Average Sale
+                    </p>
+
+
+                    <h3>
+
+                        ₱{{ "%.2f"|format(
+                            sales_summary.average_sale
+                        ) }}
+
+                    </h3>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             TRANSACTION PANEL
+             ========================================== -->
+
+        <section class="panel transaction-panel">
+
+
+            <!-- PANEL HEADER -->
+
+            <div class="transaction-panel-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        COMPLETED TRANSACTIONS
+                    </p>
+
+                    <h2>
+                        Transaction History
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 TRANSACTION TOOLS
+                 ========================================== -->
+
+            <div class="transaction-tools">
+
+
+                <!-- SEARCH -->
+
+                <div class="transaction-search">
+
+
+                    <span>
+                        🔍
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="transactionSearch"
+                        placeholder="Search customer or computer...">
+
+
+                </div>
+
+
+
+                <!-- DATE FILTER -->
+
+                <select
+                    id="transactionDateFilter"
+                    class="transaction-date-filter">
+
+
+                    <option value="all">
+                        All Dates
+                    </option>
+
+
+                    <option value="today">
+                        Today
+                    </option>
+
+
+                    <option value="yesterday">
+                        Yesterday
+                    </option>
+
+
+                    <option value="week" selected>
+                        This Week
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 TRANSACTION TABLE
+                 ========================================== -->
+
+            <div class="transaction-table-container">
+
+
+                <table class="transaction-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Computer
+                            </th>
+
+                            <th>
+                                Started
+                            </th>
+
+                            <th>
+                                Ended
+                            </th>
+
+                            <th>
+                                Duration
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                        {% for transaction in transactions %}
+
+
+                            <tr>
+
+
+                                <!-- ID -->
+
+                                <td>
+
+                                    <strong>
+
+                                        #{{ transaction.session_id }}
+
+                                    </strong>
+
+                                </td>
+
+
+
+                                <!-- CUSTOMER -->
+
+                                <td>
+
+                                    {{ transaction.customer_name or 'Walk-in' }}
+
+                                </td>
+
+
+
+                                <!-- COMPUTER -->
+
+                                <td>
+
+                                    {{ transaction.computer_number }}
+
+                                </td>
+
+
+
+                                <!-- STARTED -->
+
+                                <td>
+
+                                    {% if transaction.start_time %}
+
+                                        {{ transaction.start_time.strftime(
+                                            '%b %d, %Y %I:%M %p'
+                                        ) }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- ENDED -->
+
+                                <td>
+
+                                    {% if transaction.end_time %}
+
+                                        {{ transaction.end_time.strftime(
+                                            '%b %d, %Y %I:%M %p'
+                                        ) }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- DURATION -->
+
+                                <td>
+
+                                    {% if transaction.duration_minutes %}
+
+                                        {{ transaction.duration_minutes }}
+                                        min
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- AMOUNT -->
+
+                                <td>
+
+                                    <strong
+                                        class="transaction-amount">
+
+                                        ₱{{ "%.2f"|format(
+                                            transaction.total_amount or 0
+                                        ) }}
+
+                                    </strong>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% else %}
+
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="empty-transactions">
+
+                                    No completed transactions found.
+
+                                </td>
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 TRANSACTION FOOTER
+                 ========================================== -->
+
+            <div class="transaction-footer">
+
+
+                <span>
+
+                    Total completed transactions:
+
+                    <strong
+                        id="transactionCount">
+
+                        {{ transactions|length }}
+
+                    </strong>
+
+                </span>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ==========================================
+         TRANSACTION FILTER SCRIPT
+         ========================================== -->
+
+    <script>
+
+
+        const transactionSearch =
+            document.getElementById(
+                "transactionSearch"
+            );
+
+
+        const transactionDateFilter =
+            document.getElementById(
+                "transactionDateFilter"
+            );
+
+
+        const transactionTable =
+            document.querySelector(
+                ".transaction-table tbody"
+            );
+
+
+
+        function filterTransactions() {
+
+
+            const searchValue =
+                transactionSearch.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const dateFilter =
+                transactionDateFilter.value;
+
+
+            const rows =
+                transactionTable.querySelectorAll(
+                    "tr"
+                );
+
+
+            const now =
+                new Date();
+
+
+
+            /*
+             * ======================================
+             * START OF THIS WEEK
+             *
+             * MILA uses:
+             *
+             * Monday = first day
+             * Sunday = last day
+             * ======================================
+             */
+
+            const startOfWeek =
+                new Date(now);
+
+
+            const currentDay =
+                startOfWeek.getDay();
+
+
+            /*
+             * JavaScript:
+             *
+             * Sunday = 0
+             * Monday = 1
+             * Tuesday = 2
+             * ...
+             * Saturday = 6
+             *
+             * Convert this so Monday = first day.
+             */
+
+            const daysFromMonday =
+                currentDay === 0
+                    ? 6
+                    : currentDay - 1;
+
+
+            startOfWeek.setDate(
+                startOfWeek.getDate()
+                - daysFromMonday
+            );
+
+
+            startOfWeek.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+
+            /*
+             * ======================================
+             * START OF YESTERDAY
+             * ======================================
+             */
+
+            const yesterday =
+                new Date(now);
+
+
+            yesterday.setDate(
+                yesterday.getDate() - 1
+            );
+
+
+            yesterday.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+
+            /*
+             * END OF TODAY
+             * ======================================
+             */
+
+            const todayStart =
+                new Date(now);
+
+
+            todayStart.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+
+            /*
+             * ======================================
+             * PROCESS TABLE ROWS
+             * ======================================
+             */
+
+            rows.forEach(
+                function(row) {
+
+
+                    /*
+                     * Skip empty-table row.
+                     */
+
+                    if (
+                        row.children.length < 7
+                    ) {
+
+                        return;
+
+                    }
+
+
+
+                    /*
+                     * ==================================
+                     * SEARCH
+                     * ==================================
+                     */
+
+                    const rowText =
+                        row.textContent
+                            .toLowerCase();
+
+
+                    const matchesSearch =
+                        rowText.includes(
+                            searchValue
+                        );
+
+
+
+                    /*
+                     * ==================================
+                     * GET START DATE
+                     *
+                     * Column 4:
+                     * Started
+                     * ==================================
+                     */
+
+                    const startedText =
+                        row.children[3]
+                            .textContent
+                            .trim();
+
+
+                    const startedDate =
+                        new Date(
+                            startedText
+                        );
+
+
+
+                    let matchesDate = true;
+
+
+
+                    /*
+                     * ==================================
+                     * ALL DATES
+                     * ==================================
+                     */
+
+                    if (
+                        dateFilter === "all"
+                    ) {
+
+                        matchesDate = true;
+
+                    }
+
+
+
+                    /*
+                     * ==================================
+                     * TODAY
+                     * ==================================
+                     */
+
+                    else if (
+                        dateFilter === "today"
+                    ) {
+
+                        matchesDate =
+                            startedDate.toDateString()
+                            ===
+                            todayStart.toDateString();
+
+                    }
+
+
+
+                    /*
+                     * ==================================
+                     * YESTERDAY
+                     * ==================================
+                     */
+
+                    else if (
+                        dateFilter === "yesterday"
+                    ) {
+
+
+                        matchesDate =
+                            startedDate.toDateString()
+                            ===
+                            yesterday.toDateString();
+
+                    }
+
+
+
+                    /*
+                     * ==================================
+                     * THIS WEEK
+                     *
+                     * Monday -> Sunday
+                     * ==================================
+                     */
+
+                    else if (
+                        dateFilter === "week"
+                    ) {
+
+
+                        matchesDate =
+                            startedDate >= startOfWeek
+                            &&
+                            startedDate <= now;
+
+                    }
+
+
+
+                    /*
+                     * ==================================
+                     * SHOW / HIDE
+                     * ==================================
+                     */
+
+                    if (
+                        matchesSearch
+                        &&
+                        matchesDate
+                    ) {
+
+                        row.style.display = "";
+
+                    }
+
+                    else {
+
+                        row.style.display = "none";
+
+                    }
+
+
+                }
+            );
+
+
+            /*
+             * ======================================
+             * UPDATE VISIBLE TRANSACTION COUNT
+             * ======================================
+             */
+
+            let visibleCount = 0;
+
+
+            rows.forEach(
+                function(row) {
+
+
+                    if (
+                        row.children.length >= 7
+                        &&
+                        row.style.display !== "none"
+                    ) {
+
+                        visibleCount++;
+
+                    }
+
+                }
+            );
+
+
+            const transactionCount =
+                document.getElementById(
+                    "transactionCount"
+                );
+
+
+            if (transactionCount) {
+
+                transactionCount.textContent =
+                    visibleCount;
+
+            }
+
+
+        }
+
+
+
+        /*
+         * ==========================================
+         * SEARCH EVENT
+         * ==========================================
+         */
+
+        transactionSearch.addEventListener(
+            "keyup",
+            filterTransactions
+        );
+
+
+
+        /*
+         * ==========================================
+         * DATE FILTER EVENT
+         * ==========================================
+         */
+
+        transactionDateFilter.addEventListener(
+            "change",
+            filterTransactions
+        );
+
+
+        filterTransactions();
+
+
+    </script>
+
+
+</body>
+
+</html>

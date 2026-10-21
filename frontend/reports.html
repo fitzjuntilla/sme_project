@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Reports</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     SIDEBAR
+     ========================================== -->
+
+<aside class="sidebar">
+
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            M
+        </div>
+
+        <div>
+
+            <h2>
+                MILA
+            </h2>
+
+            <span>
+                Internet Cafe
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+
+        <a href="{{ url_for('dashboard.dashboard') }}"
+           class="nav-item">
+
+            <span>▣</span>
+
+            Dashboard
+
+        </a>
+
+
+        <a href="{{ url_for('computers.computers') }}"
+           class="nav-item">
+
+            <span>▦</span>
+
+            Computers
+
+        </a>
+
+
+        <a href="{{ url_for('customers.customers') }}"
+           class="nav-item">
+
+            <span>♙</span>
+
+            Customers
+
+        </a>
+
+
+        <a href="{{ url_for('services.services') }}"
+           class="nav-item">
+
+            <span>▤</span>
+
+            Services
+
+        </a>
+
+
+        <a href="{{ url_for('inventory.inventory') }}"
+           class="nav-item">
+
+            <span>▥</span>
+
+            Inventory
+
+        </a>
+
+
+        <a href="{{ url_for('transactions.transactions') }}"
+           class="nav-item">
+
+            <span>₱</span>
+
+            Transactions
+
+        </a>
+
+
+        {% if role == 'Owner' %}
+
+
+        <a href="{{ url_for('reports.reports') }}"
+           class="nav-item active">
+
+            <span>▧</span>
+
+            Reports
+
+        </a>
+
+
+        <a href="{{ url_for('staff.staff') }}"
+           class="nav-item">
+
+            <span>♙</span>
+
+            Manage Staff
+
+        </a>
+
+
+        {% endif %}
+
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+
+        <a href="{{ url_for('auth.logout') }}"
+           class="logout">
+
+            <span>↪</span>
+
+            Logout
+
+        </a>
+
+
+    </div>
+
+
+</aside>
+
+
+
+<!-- ==========================================
+     MAIN CONTENT
+     ========================================== -->
+
+<main class="main-content">
+
+
+    <!-- ==========================================
+         TOP BAR
+         ========================================== -->
+
+    <header class="topbar">
+
+
+        <div>
+
+            <p class="page-label">
+                REPORTS & ANALYTICS
+            </p>
+
+            <h1>
+                Reports
+            </h1>
+
+        </div>
+
+
+        <div class="user-profile">
+
+
+            <div class="avatar">
+
+                {{ full_name[0] | upper }}
+
+            </div>
+
+
+            <div class="user-info">
+
+                <strong>
+                    {{ full_name }}
+                </strong>
+
+                <span>
+                    {{ role }}
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- ==========================================
+         PAGE INTRO
+         ========================================== -->
+
+    <section class="welcome">
+
+
+        <div>
+
+            <h2>
+                Business Reports
+            </h2>
+
+            <p>
+                {{ report_title }}
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==========================================
+         SUMMARY CARDS
+         ========================================== -->
+
+    <section class="stats-grid">
+
+
+        <!-- TOTAL SALES -->
+
+        <div class="stat-card">
+
+
+            <div class="stat-icon computers-icon">
+                ₱
+            </div>
+
+
+            <div>
+
+                <p>
+                    {{ report_title }} Sales
+                </p>
+
+
+                <h3>
+
+                    ₱{{ "%.2f"|format(total_sales) }}
+
+                </h3>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- TRANSACTIONS -->
+
+        <div class="stat-card">
+
+
+            <div class="stat-icon available-icon">
+                #
+            </div>
+
+
+            <div>
+
+                <p>
+                    {{ report_title }} Transactions
+                </p>
+
+
+                <h3>
+
+                    {{ transaction_count }}
+
+                </h3>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- AVERAGE SALE -->
+
+        <div class="stat-card">
+
+
+            <div class="stat-icon session-icon">
+                ₱
+            </div>
+
+
+            <div>
+
+                <p>
+                    Average Sale
+                </p>
+
+
+                <h3>
+
+                    ₱{{ "%.2f"|format(average_sale) }}
+
+                </h3>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- REPORT PERIOD -->
+
+        <div class="stat-card report-period-card">
+
+
+            <div class="report-period-content">
+
+
+                <p>
+                    Report Period
+                </p>
+
+
+                <select
+                    id="reportRange"
+                    onchange="applyReportFilter()">
+
+
+                    <option
+                        value="today"
+
+                        {% if date_filter == 'today' %}
+                            selected
+                        {% endif %}>
+
+                        Today
+
+                    </option>
+
+
+                    <option
+                        value="yesterday"
+
+                        {% if date_filter == 'yesterday' %}
+                            selected
+                        {% endif %}>
+
+                        Yesterday
+
+                    </option>
+
+
+                    <option
+                        value="week"
+
+                        {% if date_filter == 'week' %}
+                            selected
+                        {% endif %}>
+
+                        This Week
+
+                    </option>
+
+
+                    <option
+                        value="month"
+
+                        {% if date_filter == 'month' %}
+                            selected
+                        {% endif %}>
+
+                        This Month
+
+                    </option>
+
+
+                    <option
+                        value="custom"
+
+                        {% if date_filter == 'custom' %}
+                            selected
+                        {% endif %}>
+
+                        Custom Date
+
+                    </option>
+
+
+                </select>
+
+
+                <input
+                    type="date"
+                    id="customReportDate"
+                    class="custom-report-date"
+                    value="{{ request.args.get('date', '') }}"
+                    onchange="applyCustomDate()">
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==========================================
+         PROFIT & EXPENSES
+         ========================================== -->
+
+    <section class="panel">
+
+
+        <div class="panel-header">
+
+
+            <div>
+
+                <p class="panel-label">
+                    OWNER FINANCIAL SUMMARY
+                </p>
+
+
+                <h2>
+                    Profit & Expenses
+                </h2>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="stats-grid">
+
+
+            <!-- COMPUTER REVENUE -->
+
+            <div class="stat-card">
+
+
+                <div class="stat-icon computers-icon">
+                    PC
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Computer Revenue
+                    </p>
+
+
+                    <h3>
+
+                        ₱{{ "%.2f"|format(
+                            computer_revenue
+                        ) }}
+
+                    </h3>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- SERVICE REVENUE -->
+
+            <div class="stat-card">
+
+
+                <div class="stat-icon available-icon">
+                    S
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Service Revenue
+                    </p>
+
+
+                    <h3>
+
+                        ₱{{ "%.2f"|format(
+                            service_revenue
+                        ) }}
+
+                    </h3>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- COMPUTER COST -->
+
+            <div class="stat-card">
+
+
+                <div class="stat-icon occupied-icon">
+                    C
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Computer Operating Cost
+                    </p>
+
+
+                    <h3>
+
+                        ₱{{ "%.2f"|format(
+                            computer_operating_cost
+                        ) }}
+
+                    </h3>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MATERIAL COST -->
+
+            <div class="stat-card">
+
+
+                <div class="stat-icon session-icon">
+                    M
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Service Material Cost
+                    </p>
+
+
+                    <h3>
+
+                        ₱{{ "%.2f"|format(
+                            service_material_cost
+                        ) }}
+
+                    </h3>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- TOTAL EXPENSE + NET PROFIT -->
+
+        <div class="two-column">
+
+
+            <!-- TOTAL EXPENSES -->
+
+            <div class="panel">
+
+
+                <div class="panel-header">
+
+
+                    <div>
+
+                        <p class="panel-label">
+                            EXPENSES
+                        </p>
+
+
+                        <h2>
+                            Total Expenses
+                        </h2>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="sales-value">
+
+                    ₱{{ "%.2f"|format(
+                        total_expenses
+                    ) }}
+
+                </div>
+
+
+                <p class="panel-description">
+
+                    Computer operating costs +
+                    service material costs
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- NET PROFIT -->
+
+            <div class="panel">
+
+
+                <div class="panel-header">
+
+
+                    <div>
+
+                        <p class="panel-label">
+                            OWNER PROFIT
+                        </p>
+
+
+                        <h2>
+                            Net Profit
+                        </h2>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="sales-value">
+
+                    ₱{{ "%.2f"|format(
+                        net_profit
+                    ) }}
+
+                </div>
+
+
+                <p class="panel-description">
+
+                    Total sales minus total expenses
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==========================================
+         REVENUE BREAKDOWN
+         ========================================== -->
+
+    <section class="two-column">
+
+
+        <!-- SERVICE SALES -->
+
+        <div class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <p class="panel-label">
+                        SERVICES
+                    </p>
+
+
+                    <h2>
+                        Service Sales
+                    </h2>
+
+                </div>
+
+
+            </div>
+
+
+
+            {% if service_sales %}
+
+
+                <div class="report-list">
+
+
+                    {% for service in service_sales %}
+
+
+                        <div class="report-item">
+
+
+                            <div>
+
+
+                                <strong>
+                                    {{ service.service_name }}
+                                </strong>
+
+
+                                <span>
+
+                                    {{ service.service_type }}
+
+                                    •
+
+                                    {{ service.total_quantity }}
+
+                                    use(s)
+
+                                </span>
+
+
+                            </div>
+
+
+                            <div>
+
+
+                                <strong>
+
+                                    ₱{{ "%.2f"|format(
+                                        service.total_sales
+                                    ) }}
+
+                                </strong>
+
+
+                                <span>
+
+                                    Material Cost:
+
+                                    ₱{{ "%.2f"|format(
+                                        service.total_material_cost or 0
+                                    ) }}
+
+                                </span>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="no-alert">
+
+
+                    <span>
+                        ✓
+                    </span>
+
+
+                    <p>
+                        No service sales recorded for this period.
+                    </p>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- LOW STOCK -->
+
+        <div class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <p class="panel-label">
+                        INVENTORY
+                    </p>
+
+
+                    <h2>
+                        Low Stock
+                    </h2>
+
+                </div>
+
+
+                <div class="warning-icon">
+                    !
+                </div>
+
+
+            </div>
+
+
+
+            {% if low_stock_items %}
+
+
+                <div class="stock-list">
+
+
+                    {% for item in low_stock_items %}
+
+
+                        <div class="stock-item">
+
+
+                            <div>
+
+
+                                <strong>
+                                    {{ item.item_name }}
+                                </strong>
+
+
+                                <span>
+
+                                    Minimum:
+
+                                    {{ item.minimum_stock }}
+
+                                    {{ item.unit }}
+
+                                </span>
+
+
+                            </div>
+
+
+                            <strong class="stock-number">
+
+                                {{ item.quantity }}
+
+                                {{ item.unit }}
+
+                            </strong>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="no-alert">
+
+
+                    <span>
+                        ✓
+                    </span>
+
+
+                    <p>
+                        All inventory items have sufficient stock.
+                    </p>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==========================================
+         RECENT TRANSACTIONS
+         ========================================== -->
+
+    <section class="panel report-transactions-panel">
+
+
+        <div class="panel-header">
+
+
+            <div>
+
+                <p class="panel-label">
+                    TRANSACTION HISTORY
+                </p>
+
+
+                <h2>
+                    Recent Transactions
+                </h2>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="report-table-container">
+
+
+            <table class="report-table">
+
+
+                <thead>
+
+
+                    <tr>
+
+
+                        <th>
+                            ID
+                        </th>
+
+
+                        <th>
+                            Customer
+                        </th>
+
+
+                        <th>
+                            Date
+                        </th>
+
+
+                        <th>
+                            Amount
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for transaction in recent_transactions %}
+
+
+                        <tr>
+
+
+                            <td>
+
+                                #{{ transaction.transaction_id }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ transaction.customer_name or 'Walk-in Customer' }}
+
+                            </td>
+
+
+                            <td>
+
+
+                                {% if transaction.transaction_date %}
+
+
+                                    {{ transaction.transaction_date.strftime(
+                                        '%b %d, %Y %I:%M %p'
+                                    ) }}
+
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+
+
+                                <strong>
+
+                                    ₱{{ "%.2f"|format(
+                                        transaction.total_amount
+                                    ) }}
+
+                                </strong>
+
+
+                            </td>
+
+
+                            <td>
+
+
+                                {% if transaction.payment_status == 'Paid' %}
+
+
+                                    <span class="report-status paid">
+
+                                        Paid
+
+                                    </span>
+
+
+                                {% elif transaction.payment_status == 'Pending' %}
+
+
+                                    <span class="report-status pending">
+
+                                        Pending
+
+                                    </span>
+
+
+                                {% else %}
+
+
+                                    <span class="report-status cancelled">
+
+                                        Cancelled
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% else %}
+
+
+                        <tr>
+
+
+                            <td
+                                colspan="5"
+                                class="empty-report">
+
+                                No transactions found.
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ==========================================
+     REPORT FILTER JAVASCRIPT
+     ========================================== -->
+
+<script>
+
+
+function applyReportFilter() {
+
+
+    const range =
+        document.getElementById(
+            "reportRange"
+        ).value;
+
+
+    if (range === "custom") {
+
+
+        const dateInput =
+            document.getElementById(
+                "customReportDate"
+            );
+
+
+        dateInput.style.display =
+            "block";
+
+
+        if (dateInput.value) {
+
+
+            window.location.href =
+                "{{ url_for('reports.reports') }}" +
+                "?range=custom&date=" +
+                encodeURIComponent(
+                    dateInput.value
+                );
+
+
+        }
+
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "customReportDate"
+    ).style.display =
+        "none";
+
+
+    window.location.href =
+        "{{ url_for('reports.reports') }}" +
+        "?range=" +
+        encodeURIComponent(
+            range
+        );
+
+}
+
+
+function applyCustomDate() {
+
+
+    const date =
+        document.getElementById(
+            "customReportDate"
+        ).value;
+
+
+    if (!date) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "{{ url_for('reports.reports') }}" +
+        "?range=custom&date=" +
+        encodeURIComponent(
+            date
+        );
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const range =
+            document.getElementById(
+                "reportRange"
+            ).value;
+
+
+        const dateInput =
+            document.getElementById(
+                "customReportDate"
+            );
+
+
+        if (range === "custom") {
+
+
+            dateInput.style.display =
+                "block";
+
+
+        } else {
+
+
+            dateInput.style.display =
+                "none";
+
+
+        }
+
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

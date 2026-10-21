@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Customers</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                M
+            </div>
+
+            <div>
+
+                <h2>MILA</h2>
+
+                <span>
+                    Internet Cafe
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a href="{{ url_for('dashboard.dashboard') }}"
+               class="nav-item">
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('computers.computers') }}"
+               class="nav-item">
+
+                <span>▦</span>
+
+                Computers
+
+            </a>
+
+
+            <a href="{{ url_for('customers.customers') }}"
+               class="nav-item active">
+
+                <span>♙</span>
+
+                Customers
+
+            </a>
+
+
+            <a href="{{ url_for('services.services') }}"
+   class="nav-item">
+
+    <span>▤</span>
+
+    Services
+
+</a>
+
+
+            <a href="{{ url_for('inventory.inventory') }}"
+               class="nav-item">
+
+                <span>▥</span>
+
+                Inventory
+
+            </a>
+
+
+           <a href="{{ url_for('transactions.transactions') }}"
+   class="nav-item">
+
+    <span>₱</span>
+
+    Transactions
+
+</a>
+
+
+{% if role == 'Owner' %}
+
+<a href="{{ url_for('reports.reports') }}"
+   class="nav-item">
+
+    <span>▧</span>
+
+    Reports
+
+</a>
+
+
+<a href="{{ url_for('staff.staff') }}"
+   class="nav-item">
+
+    <span>♙</span>
+
+    Manage Staff
+
+</a>
+
+{% endif %}
+
+</nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout">
+
+                <span>↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="page-label">
+                    CUSTOMER MANAGEMENT
+                </p>
+
+                <h1>
+                    Customers
+                </h1>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="avatar">
+                    {{ full_name[0] | upper }}
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ full_name }}
+                    </strong>
+
+                    <span>
+                        {{ role }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE INTRO -->
+
+        <section class="welcome">
+
+            <div>
+
+                <h2>
+                    Customer Records
+                </h2>
+
+                <p>
+                    Manage registered customers of MILA Internet Cafe.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- CUSTOMER PANEL -->
+
+        <section class="panel customer-panel">
+
+
+            <!-- PANEL HEADER -->
+
+            <div class="customer-panel-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        REGISTERED CUSTOMERS
+                    </p>
+
+                    <h2>
+                        Customer List
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-customer-button"
+                    onclick="openCustomerModal()">
+
+                    + Add Customer
+
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="customer-tools">
+
+                <div class="customer-search">
+
+                    <span>
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerSearch"
+                        placeholder="Search customer...">
+
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMER TABLE -->
+
+            <div class="customer-table-container">
+
+                <table class="customer-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Customer Name
+                            </th>
+
+                            <th>
+                                Contact Number
+                            </th>
+
+                            <th>
+                                Registered
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="customerTableBody">
+
+
+                        {% for customer in customers %}
+
+                            <tr>
+
+                                <td>
+
+                                    <span class="customer-id">
+
+                                        {{ customer.customer_id }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="customer-name-cell">
+
+                                        <div class="customer-avatar">
+
+                                            {{ customer.customer_name[0] | upper }}
+
+                                        </div>
+
+                                        <strong>
+
+                                            {{ customer.customer_name }}
+
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ customer.contact_number }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if customer.created_at %}
+
+                                        {{ customer.created_at.strftime('%b %d, %Y') }}
+
+                                    {% else %}
+
+                                        -
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="customer-actions">
+
+
+                                        <!-- EDIT -->
+
+                                        <button
+                                            type="button"
+                                            class="edit-customer-button"
+                                            data-id="{{ customer.customer_id }}"
+                                            data-name="{{ customer.customer_name }}"
+                                            data-contact="{{ customer.contact_number }}"
+                                            onclick="openEditCustomerModal(this)">
+
+                                            Edit
+
+                                        </button>
+
+
+                                        <!-- DELETE -->
+
+                                        <form
+                                            action="{{ url_for(
+                                                'customers.delete_customer',
+                                                customer_id=customer.customer_id
+                                            ) }}"
+                                            method="POST"
+                                            onsubmit="return confirmDeleteCustomer(
+                                                '{{ customer.customer_name }}'
+                                            );">
+
+                                            <button
+                                                type="submit"
+                                                class="delete-customer-button">
+
+                                                Delete
+
+                                            </button>
+
+                                        </form>
+
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+
+                        {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="empty-customers">
+
+                                    No customers found.
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- CUSTOMER COUNT -->
+
+            <div class="customer-footer">
+
+                <span>
+
+                    Showing
+
+                    <strong>
+                        {{ customers|length }}
+                    </strong>
+
+                    customer(s)
+
+                </span>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         ADD CUSTOMER MODAL
+         ========================================== -->
+
+    <div
+        id="customerModal"
+        class="customer-modal">
+
+        <div class="customer-modal-content">
+
+
+            <div class="customer-modal-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        CUSTOMER MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Add Customer
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeCustomerModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <form
+                action="{{ url_for('customers.add_customer') }}"
+                method="POST">
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Customer Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="customer_name"
+                        placeholder="Enter customer name"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Contact Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="contact_number"
+                        placeholder="09XXXXXXXXX"
+                        required>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeCustomerModal()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-customer-button">
+
+                        Save Customer
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         EDIT CUSTOMER MODAL
+         ========================================== -->
+
+    <div
+        id="editCustomerModal"
+        class="customer-modal">
+
+        <div class="customer-modal-content">
+
+
+            <div class="customer-modal-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        CUSTOMER MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Edit Customer
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeEditCustomerModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <form
+                id="editCustomerForm"
+                method="POST">
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Customer Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editCustomerName"
+                        name="customer_name"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Contact Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editContactNumber"
+                        name="contact_number"
+                        required>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeEditCustomerModal()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-customer-button">
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <script>
+
+
+        /* ==========================================
+           ADD CUSTOMER MODAL
+           ========================================== */
+
+        function openCustomerModal() {
+
+            document
+                .getElementById("customerModal")
+                .classList.add("show");
+
+        }
+
+
+        function closeCustomerModal() {
+
+            document
+                .getElementById("customerModal")
+                .classList.remove("show");
+
+        }
+
+
+        /* ==========================================
+           EDIT CUSTOMER MODAL
+           ========================================== */
+
+        function openEditCustomerModal(button) {
+
+            const customerId =
+                button.dataset.id;
+
+
+            const customerName =
+                button.dataset.name;
+
+
+            const contactNumber =
+                button.dataset.contact;
+
+
+            document.getElementById(
+                "editCustomerName"
+            ).value = customerName;
+
+
+            document.getElementById(
+                "editContactNumber"
+            ).value = contactNumber;
+
+
+            document.getElementById(
+                "editCustomerForm"
+            ).action =
+                "/customers/edit/" + customerId;
+
+
+            document.getElementById(
+                "editCustomerModal"
+            ).classList.add("show");
+
+        }
+
+
+        function closeEditCustomerModal() {
+
+            document
+                .getElementById("editCustomerModal")
+                .classList.remove("show");
+
+        }
+
+
+        /* ==========================================
+           DELETE CUSTOMER
+           ========================================== */
+
+        function confirmDeleteCustomer(customerName) {
+
+            return confirm(
+                "Are you sure you want to delete " +
+                customerName +
+                "?"
+            );
+
+        }
+
+
+        /* ==========================================
+           SEARCH CUSTOMER
+           ========================================== */
+
+        const searchInput =
+            document.getElementById(
+                "customerSearch"
+            );
+
+
+        const tableBody =
+            document.getElementById(
+                "customerTableBody"
+            );
+
+
+        searchInput.addEventListener(
+            "keyup",
+            function () {
+
+                const searchValue =
+                    this.value.toLowerCase();
+
+
+                const rows =
+                    tableBody.querySelectorAll(
+                        "tr"
+                    );
+
+
+                rows.forEach(
+                    function (row) {
+
+                        const text =
+                            row.textContent.toLowerCase();
+
+
+                        if (
+                            text.includes(
+                                searchValue
+                            )
+                        ) {
+
+                            row.style.display =
+                                "";
+
+                        } else {
+
+                            row.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* ==========================================
+           CLOSE MODALS WHEN CLICKING OUTSIDE
+           ========================================== */
+
+        window.addEventListener(
+            "click",
+            function(event) {
+
+                const addModal =
+                    document.getElementById(
+                        "customerModal"
+                    );
+
+
+                const editModal =
+                    document.getElementById(
+                        "editCustomerModal"
+                    );
+
+
+                if (
+                    event.target === addModal
+                ) {
+
+                    closeCustomerModal();
+
+                }
+
+
+                if (
+                    event.target === editModal
+                ) {
+
+                    closeEditCustomerModal();
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                M
+            </div>
+
+            <div>
+
+                <h2>MILA</h2>
+
+                <span>
+                    Internet Cafe
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+
+            <!-- DASHBOARD -->
+
+            <a href="{{ url_for('dashboard.dashboard') }}"
+               class="nav-item active">
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <!-- COMPUTERS -->
+
+            <a href="{{ url_for('computers.computers') }}"
+               class="nav-item">
+
+                <span>▦</span>
+
+                Computers
+
+            </a>
+
+
+            <!-- CUSTOMERS -->
+
+            <a href="{{ url_for('customers.customers') }}"
+               class="nav-item">
+
+                <span>♙</span>
+
+                Customers
+
+            </a>
+
+
+            <!-- SERVICES -->
+
+            <a href="{{ url_for('services.services') }}"
+               class="nav-item">
+
+                <span>▤</span>
+
+                Services
+
+            </a>
+
+
+            <!-- INVENTORY -->
+
+            <a href="{{ url_for('inventory.inventory') }}"
+               class="nav-item">
+
+                <span>▥</span>
+
+                Inventory
+
+            </a>
+
+
+            <!-- TRANSACTIONS -->
+
+            <a href="{{ url_for('transactions.transactions') }}"
+               class="nav-item">
+
+                <span>₱</span>
+
+                Transactions
+
+            </a>
+
+
+            <!-- OWNER ONLY -->
+
+            {% if role == 'Owner' %}
+
+
+                <!-- REPORTS -->
+
+                <a href="{{ url_for('reports.reports') }}"
+                   class="nav-item">
+
+                    <span>▧</span>
+
+                    Reports
+
+                </a>
+
+
+                <!-- MANAGE STAFF -->
+
+                <a href="{{ url_for('staff.staff') }}"
+                   class="nav-item">
+
+                    <span>♙</span>
+
+                    Manage Staff
+
+                </a>
+
+
+            {% endif %}
+
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout">
+
+                <span>↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ==========================================
+             TOP BAR
+             ========================================== -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="page-label">
+                    MANAGEMENT SYSTEM
+                </p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="avatar">
+
+                    {{ full_name[0] | upper }}
+
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ full_name }}
+                    </strong>
+
+                    <span>
+                        {{ role }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==========================================
+             WELCOME
+             ========================================== -->
+
+        <section class="welcome">
+
+            <div>
+
+                <h2>
+                    Welcome, {{ full_name }}!
+                </h2>
+
+                <p>
+                    Here's what's happening at MILA Internet Cafe today.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             STAT CARDS
+             ========================================== -->
+
+        <section class="stats-grid">
+
+
+            <!-- TOTAL COMPUTERS -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon computers-icon">
+                    PC
+                </div>
+
+                <div>
+
+                    <p>
+                        Total Computers
+                    </p>
+
+                    <h3>
+                        {{ total_computers }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- AVAILABLE -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon available-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <p>
+                        Available
+                    </p>
+
+                    <h3>
+                        {{ available_computers }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- OCCUPIED -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon occupied-icon">
+                    ●
+                </div>
+
+                <div>
+
+                    <p>
+                        Occupied
+                    </p>
+
+                    <h3>
+                        {{ occupied_computers }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVE SESSIONS -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon session-icon">
+                    ◷
+                </div>
+
+                <div>
+
+                    <p>
+                        Active Sessions
+                    </p>
+
+                    <h3>
+                        {{ active_sessions }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             SALES + INVENTORY
+             ========================================== -->
+
+        <section class="two-column">
+
+
+            <!-- TODAY SALES -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="panel-label">
+                            SALES
+                        </p>
+
+                        <h2>
+                            Today's Sales
+                        </h2>
+
+                    </div>
+
+
+                    <div class="money-icon">
+                        ₱
+                    </div>
+
+                </div>
+
+
+                <div class="sales-value">
+
+                    ₱{{ "%.2f"|format(today_sales) }}
+
+                </div>
+
+
+                <p class="panel-description">
+
+                    Total paid transactions today
+
+                </p>
+
+            </div>
+
+
+
+            <!-- LOW STOCK -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="panel-label">
+                            INVENTORY
+                        </p>
+
+                        <h2>
+                            Low Stock
+                        </h2>
+
+                    </div>
+
+
+                    <div class="warning-icon">
+                        !
+                    </div>
+
+                </div>
+
+
+                {% if low_stock_items %}
+
+
+                    <div class="stock-list">
+
+
+                        {% for item in low_stock_items %}
+
+
+                            <div class="stock-item">
+
+                                <div>
+
+                                    <strong>
+                                        {{ item.item_name }}
+                                    </strong>
+
+                                    <span>
+
+                                        Minimum:
+                                        {{ item.minimum_stock }}
+                                        {{ item.unit }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <strong class="stock-number">
+
+                                    {{ item.quantity }}
+                                    {{ item.unit }}
+
+                                </strong>
+
+                            </div>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="no-alert">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            All inventory items have sufficient stock.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             COMPUTER STATUS
+             ========================================== -->
+
+        <section class="panel computer-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        COMPUTER MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Computer Status
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="computer-grid">
+
+
+                {% for computer in computers %}
+
+
+                    <div class="
+                        computer-card
+
+                        {% if computer.status == 'Available' %}
+
+                            available
+
+                        {% elif computer.status == 'Occupied' %}
+
+                            occupied
+
+                        {% else %}
+
+                            maintenance
+
+                        {% endif %}
+                    ">
+
+
+                        <!-- COMPUTER TOP -->
+
+                        <div class="computer-top">
+
+                            <strong>
+                                {{ computer.computer_number }}
+                            </strong>
+
+                            <span class="status-dot"></span>
+
+                        </div>
+
+
+
+                        <!-- COMPUTER NAME -->
+
+                        <p>
+
+                            {{ computer.computer_name }}
+
+                        </p>
+
+
+
+                        <!-- COMPUTER STATUS -->
+
+                        <div class="computer-bottom">
+
+
+                            {% if computer.status == 'Occupied' %}
+
+
+                                <div class="dashboard-occupied-info">
+
+                                    <span class="dashboard-status-text">
+
+                                        Occupied
+
+                                    </span>
+
+
+                                    {% if computer.occupied_until %}
+
+                                        <span class="occupied-until">
+
+                                            Until:
+
+                                            {{ computer.occupied_until.strftime(
+                                                '%I:%M %p'
+                                            ) }}
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                            {% elif computer.status == 'Available' %}
+
+
+                                <span class="dashboard-available-text">
+
+                                    Available
+
+                                </span>
+
+
+                            {% else %}
+
+
+                                <span class="dashboard-maintenance-text">
+
+                                    {{ computer.status }}
+
+                                </span>
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Services</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     SIDEBAR
+     ========================================== -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            M
+        </div>
+
+        <div>
+
+            <h2>MILA</h2>
+
+            <span>
+                Internet Cafe
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+
+        <a href="{{ url_for('dashboard.dashboard') }}"
+           class="nav-item">
+
+            <span>▣</span>
+
+            Dashboard
+
+        </a>
+
+
+        <a href="{{ url_for('computers.computers') }}"
+           class="nav-item">
+
+            <span>▦</span>
+
+            Computers
+
+        </a>
+
+
+        <a href="{{ url_for('customers.customers') }}"
+           class="nav-item">
+
+            <span>♙</span>
+
+            Customers
+
+        </a>
+
+
+        <a href="{{ url_for('services.services') }}"
+           class="nav-item active">
+
+            <span>▤</span>
+
+            Services
+
+        </a>
+
+
+        <a href="{{ url_for('inventory.inventory') }}"
+           class="nav-item">
+
+            <span>▥</span>
+
+            Inventory
+
+        </a>
+
+
+        <a href="{{ url_for('transactions.transactions') }}"
+           class="nav-item">
+
+            <span>₱</span>
+
+            Transactions
+
+        </a>
+
+
+        {% if role == 'Owner' %}
+
+
+        <a href="{{ url_for('reports.reports') }}"
+           class="nav-item">
+
+            <span>▧</span>
+
+            Reports
+
+        </a>
+
+
+        <a href="{{ url_for('staff.staff') }}"
+           class="nav-item">
+
+            <span>♙</span>
+
+            Manage Staff
+
+        </a>
+
+
+        {% endif %}
+
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="{{ url_for('auth.logout') }}"
+           class="logout">
+
+            <span>↪</span>
+
+            Logout
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ==========================================
+     MAIN CONTENT
+     ========================================== -->
+
+<main class="main-content">
+
+
+    <!-- ==========================================
+         TOP BAR
+         ========================================== -->
+
+    <header class="topbar">
+
+
+        <div>
+
+            <p class="page-label">
+                SERVICE MANAGEMENT
+            </p>
+
+            <h1>
+                Services
+            </h1>
+
+        </div>
+
+
+        <div class="user-profile">
+
+
+            <div class="avatar">
+
+                {{ full_name[0] | upper }}
+
+            </div>
+
+
+            <div class="user-info">
+
+                <strong>
+                    {{ full_name }}
+                </strong>
+
+                <span>
+                    {{ role }}
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- ==========================================
+         PAGE INTRO
+         ========================================== -->
+
+    <section class="welcome">
+
+
+        <div>
+
+            <h2>
+                Service Records
+            </h2>
+
+
+            <p>
+                Manage services and record customer service sales.
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==========================================
+         SERVICES PANEL
+         ========================================== -->
+
+    <section class="panel service-panel">
+
+
+        <!-- PANEL HEADER -->
+
+        <div class="service-panel-header">
+
+
+            <div>
+
+                <p class="panel-label">
+                    AVAILABLE SERVICES
+                </p>
+
+
+                <h2>
+                    Service List
+                </h2>
+
+            </div>
+
+
+            <div style="display:flex; gap:10px;">
+
+
+                <!-- RECORD SALE -->
+
+                <button
+                    type="button"
+                    class="add-service-button"
+                    onclick="openSaleModal()">
+
+                    + Record Sale
+
+                </button>
+
+
+                <!-- ADD SERVICE -->
+
+                <button
+                    type="button"
+                    class="add-service-button"
+                    onclick="openServiceModal()">
+
+                    + Add Service
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- SEARCH -->
+
+        <div class="service-tools">
+
+
+            <div class="service-search">
+
+                <span>
+                    🔍
+                </span>
+
+
+                <input
+                    type="text"
+                    id="serviceSearch"
+                    placeholder="Search service...">
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- SERVICE TABLE -->
+
+        <div class="service-table-container">
+
+
+            <table class="service-table">
+
+
+                <thead>
+
+
+                    <tr>
+
+
+                        <th>
+                            ID
+                        </th>
+
+
+                        <th>
+                            Service
+                        </th>
+
+
+                        <th>
+                            Type
+                        </th>
+
+
+                        <th>
+                            Description
+                        </th>
+
+
+                        <th>
+                            Price
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                        <th>
+                            Actions
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+                <tbody id="serviceTableBody">
+
+
+                    {% for service in services %}
+
+
+                        <tr>
+
+
+                            <td>
+
+                                <span class="service-id">
+
+                                    {{ service.service_id }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+
+                                    {{ service.service_name }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ service.service_type }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ service.description or '-' }}
+
+                            </td>
+
+
+                            <td>
+
+                                <strong class="service-price">
+
+                                    ₱{{ "%.2f"|format(
+                                        service.price
+                                    ) }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+
+                                {% if service.status == 'Available' %}
+
+
+                                    <span class="service-status available">
+
+                                        Available
+
+                                    </span>
+
+
+                                {% else %}
+
+
+                                    <span class="service-status unavailable">
+
+                                        Unavailable
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+
+
+                                <div class="service-actions">
+
+
+                                    <!-- EDIT -->
+
+                                    <button
+                                        type="button"
+                                        class="edit-service-button"
+
+                                        data-id="{{ service.service_id }}"
+
+                                        data-name="{{ service.service_name }}"
+
+                                        data-description="{{ service.description or '' }}"
+
+                                        data-type="{{ service.service_type }}"
+
+                                        data-price="{{ service.price }}"
+
+                                        data-status="{{ service.status }}"
+
+                                        onclick="openEditServiceModal(this)">
+
+                                        Edit
+
+                                    </button>
+
+
+                                    <!-- DEACTIVATE -->
+
+                                    <form
+                                        action="{{ url_for(
+                                            'services.delete_service',
+                                            service_id=service.service_id
+                                        ) }}"
+
+                                        method="POST"
+
+                                        onsubmit="return confirmDeleteService(
+                                            '{{ service.service_name }}'
+                                        );">
+
+
+                                        <button
+                                            type="submit"
+                                            class="delete-service-button">
+
+                                            Deactivate
+
+                                        </button>
+
+
+                                    </form>
+
+
+                                </div>
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% else %}
+
+
+                        <tr>
+
+
+                            <td
+                                colspan="7"
+                                class="empty-services">
+
+                                No services found.
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <!-- SERVICE COUNT -->
+
+        <div class="service-footer">
+
+
+            <span>
+
+                Showing
+
+                <strong>
+                    {{ services|length }}
+                </strong>
+
+                service(s)
+
+            </span>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ==========================================
+     RECORD SERVICE SALE MODAL
+     ========================================== -->
+
+<div
+    id="serviceSaleModal"
+    class="customer-modal">
+
+
+    <div class="customer-modal-content">
+
+
+        <div class="customer-modal-header">
+
+
+            <div>
+
+                <p class="panel-label">
+                    SERVICE TRANSACTION
+                </p>
+
+
+                <h2>
+                    Record Service Sale
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeSaleModal()">
+
+                ×
+
+            </button>
+
+
+        </div>
+
+
+
+        <form
+            action="{{ url_for('services.sell_service') }}"
+            method="POST">
+
+
+            <!-- CUSTOMER -->
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Customer
+                </label>
+
+
+                <select
+                    name="customer_id"
+                    required>
+
+
+                    <option value="">
+                        Select customer
+                    </option>
+
+
+                    {% for customer in customers %}
+
+
+                        <option
+                            value="{{ customer.customer_id }}">
+
+                            {{ customer.customer_name }}
+
+                        </option>
+
+
+                    {% endfor %}
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <!-- SERVICE -->
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Service
+                </label>
+
+
+                <select
+                    name="service_id"
+                    id="saleService"
+                    required
+                    onchange="updateServiceSalePrice()">
+
+
+                    <option value="">
+                        Select service
+                    </option>
+
+
+                    {% for service in services %}
+
+
+                        {% if service.status == 'Available' %}
+
+
+                            <option
+                                value="{{ service.service_id }}"
+                                data-price="{{ service.price }}">
+
+                                {{ service.service_name }}
+                                —
+                                ₱{{ "%.2f"|format(service.price) }}
+
+                            </option>
+
+
+                        {% endif %}
+
+
+                    {% endfor %}
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <!-- QUANTITY -->
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Quantity
+                </label>
+
+
+                <input
+                    type="number"
+                    name="quantity"
+                    id="saleQuantity"
+                    value="1"
+                    min="1"
+                    step="1"
+                    required
+                    oninput="updateServiceSalePrice()">
+
+
+            </div>
+
+
+
+            <!-- ESTIMATED TOTAL -->
+
+            <div class="estimated-price">
+
+
+                <span>
+                    Estimated Total
+                </span>
+
+
+                <strong
+                    id="serviceSaleTotal"
+                    class="price-value">
+
+                    ₱0.00
+
+                </strong>
+
+
+            </div>
+
+
+
+            <!-- WARNING -->
+
+            <div class="no-alert"
+                 style="margin-top:15px;">
+
+                <span>
+                    !
+                </span>
+
+
+                <p>
+
+                    Inventory materials will be deducted
+                    automatically after the sale.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- BUTTONS -->
+
+            <div class="modal-actions">
+
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="closeSaleModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-customer-button">
+
+                    Record Sale
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     ADD SERVICE MODAL
+     ========================================== -->
+
+<div
+    id="serviceModal"
+    class="customer-modal">
+
+
+    <div class="customer-modal-content">
+
+
+        <div class="customer-modal-header">
+
+
+            <div>
+
+                <p class="panel-label">
+                    SERVICE MANAGEMENT
+                </p>
+
+
+                <h2>
+                    Add Service
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeServiceModal()">
+
+                ×
+
+            </button>
+
+
+        </div>
+
+
+
+        <form
+            action="{{ url_for('services.add_service') }}"
+            method="POST">
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Service Name
+                </label>
+
+
+                <input
+                    type="text"
+                    name="service_name"
+                    placeholder="Enter service name"
+                    required>
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Description
+                </label>
+
+
+                <input
+                    type="text"
+                    name="description"
+                    placeholder="Enter description">
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Service Type
+                </label>
+
+
+                <select
+                    name="service_type"
+                    required>
+
+
+                    <option value="">
+                        Select service type
+                    </option>
+
+
+                    <option value="Printing">
+                        Printing
+                    </option>
+
+
+                    <option value="Scanning">
+                        Scanning
+                    </option>
+
+
+                    <option value="Photocopying">
+                        Photocopying
+                    </option>
+
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Price
+                </label>
+
+
+                <input
+                    type="number"
+                    name="price"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                    required>
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Status
+                </label>
+
+
+                <select
+                    name="status"
+                    required>
+
+
+                    <option value="Available">
+                        Available
+                    </option>
+
+
+                    <option value="Unavailable">
+                        Unavailable
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <div class="modal-actions">
+
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="closeServiceModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-customer-button">
+
+                    Save Service
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     EDIT SERVICE MODAL
+     ========================================== -->
+
+<div
+    id="editServiceModal"
+    class="customer-modal">
+
+
+    <div class="customer-modal-content">
+
+
+        <div class="customer-modal-header">
+
+
+            <div>
+
+                <p class="panel-label">
+                    SERVICE MANAGEMENT
+                </p>
+
+
+                <h2>
+                    Edit Service
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeEditServiceModal()">
+
+                ×
+
+            </button>
+
+
+        </div>
+
+
+
+        <form
+            id="editServiceForm"
+            method="POST">
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Service Name
+                </label>
+
+
+                <input
+                    type="text"
+                    id="editServiceName"
+                    name="service_name"
+                    required>
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Description
+                </label>
+
+
+                <input
+                    type="text"
+                    id="editServiceDescription"
+                    name="description">
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Service Type
+                </label>
+
+
+                <select
+                    id="editServiceType"
+                    name="service_type"
+                    required>
+
+
+                    <option value="Printing">
+                        Printing
+                    </option>
+
+
+                    <option value="Scanning">
+                        Scanning
+                    </option>
+
+
+                    <option value="Photocopying">
+                        Photocopying
+                    </option>
+
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Price
+                </label>
+
+
+                <input
+                    type="number"
+                    id="editServicePrice"
+                    name="price"
+                    min="0"
+                    step="0.01"
+                    required>
+
+
+            </div>
+
+
+
+            <div class="customer-form-group">
+
+
+                <label>
+                    Status
+                </label>
+
+
+                <select
+                    id="editServiceStatus"
+                    name="status"
+                    required>
+
+
+                    <option value="Available">
+                        Available
+                    </option>
+
+
+                    <option value="Unavailable">
+                        Unavailable
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <div class="modal-actions">
+
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="closeEditServiceModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-customer-button">
+
+                    Save Changes
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     JAVASCRIPT
+     ========================================== -->
+
+<script>
+
+
+/* ==========================================
+   RECORD SALE MODAL
+   ========================================== */
+
+function openSaleModal() {
+
+    document
+        .getElementById("serviceSaleModal")
+        .classList.add("show");
+
+}
+
+
+function closeSaleModal() {
+
+    document
+        .getElementById("serviceSaleModal")
+        .classList.remove("show");
+
+}
+
+
+/* ==========================================
+   SERVICE SALE PRICE
+   ========================================== */
+
+function updateServiceSalePrice() {
+
+
+    const serviceSelect =
+        document.getElementById(
+            "saleService"
+        );
+
+
+    const quantityInput =
+        document.getElementById(
+            "saleQuantity"
+        );
+
+
+    const totalElement =
+        document.getElementById(
+            "serviceSaleTotal"
+        );
+
+
+    if (
+        !serviceSelect ||
+        !quantityInput ||
+        !totalElement
+    ) {
+
+        return;
+
+    }
+
+
+    const selectedOption =
+        serviceSelect.options[
+            serviceSelect.selectedIndex
+        ];
+
+
+    if (
+        !selectedOption ||
+        !selectedOption.dataset.price
+    ) {
+
+        totalElement.textContent =
+            "₱0.00";
+
+        return;
+
+    }
+
+
+    const price =
+        parseFloat(
+            selectedOption.dataset.price
+        );
+
+
+    const quantity =
+        parseInt(
+            quantityInput.value
+        ) || 0;
+
+
+    const total =
+        price * quantity;
+
+
+    totalElement.textContent =
+        "₱" + total.toFixed(2);
+
+}
+
+
+/* ==========================================
+   ADD SERVICE
+   ========================================== */
+
+function openServiceModal() {
+
+    document
+        .getElementById("serviceModal")
+        .classList.add("show");
+
+}
+
+
+function closeServiceModal() {
+
+    document
+        .getElementById("serviceModal")
+        .classList.remove("show");
+
+}
+
+
+/* ==========================================
+   EDIT SERVICE
+   ========================================== */
+
+function openEditServiceModal(button) {
+
+
+    const serviceId =
+        button.dataset.id;
+
+
+    const serviceName =
+        button.dataset.name;
+
+
+    const description =
+        button.dataset.description;
+
+
+    const serviceType =
+        button.dataset.type;
+
+
+    const price =
+        button.dataset.price;
+
+
+    const status =
+        button.dataset.status;
+
+
+    document.getElementById(
+        "editServiceName"
+    ).value =
+        serviceName;
+
+
+    document.getElementById(
+        "editServiceDescription"
+    ).value =
+        description;
+
+
+    document.getElementById(
+        "editServiceType"
+    ).value =
+        serviceType;
+
+
+    document.getElementById(
+        "editServicePrice"
+    ).value =
+        price;
+
+
+    document.getElementById(
+        "editServiceStatus"
+    ).value =
+        status;
+
+
+    document.getElementById(
+        "editServiceForm"
+    ).action =
+        "/services/edit/" +
+        serviceId;
+
+
+    document.getElementById(
+        "editServiceModal"
+    ).classList.add("show");
+
+}
+
+
+function closeEditServiceModal() {
+
+    document
+        .getElementById("editServiceModal")
+        .classList.remove("show");
+
+}
+
+
+/* ==========================================
+   DEACTIVATE SERVICE
+   ========================================== */
+
+function confirmDeleteService(
+    serviceName
+) {
+
+    return confirm(
+        "Are you sure you want to deactivate " +
+        serviceName +
+        "?"
+    );
+
+}
+
+
+/* ==========================================
+   SEARCH SERVICE
+   ========================================== */
+
+const serviceSearch =
+    document.getElementById(
+        "serviceSearch"
+    );
+
+
+const serviceTableBody =
+    document.getElementById(
+        "serviceTableBody"
+    );
+
+
+serviceSearch.addEventListener(
+    "keyup",
+    function () {
+
+
+        const searchValue =
+            this.value
+                .toLowerCase()
+                .trim();
+
+
+        const rows =
+            serviceTableBody.querySelectorAll(
+                "tr"
+            );
+
+
+        rows.forEach(
+            function (row) {
+
+
+                const text =
+                    row.textContent
+                        .toLowerCase();
+
+
+                if (
+                    text.includes(
+                        searchValue
+                    )
+                ) {
+
+                    row.style.display =
+                        "";
+
+                } else {
+
+                    row.style.display =
+                        "none";
+
+                }
+
+
+            }
+        );
+
+
+    }
+);
+
+
+/* ==========================================
+   CLOSE MODALS OUTSIDE
+   ========================================== */
+
+window.addEventListener(
+    "click",
+    function(event) {
+
+
+        const saleModal =
+            document.getElementById(
+                "serviceSaleModal"
+            );
+
+
+        const addModal =
+            document.getElementById(
+                "serviceModal"
+            );
+
+
+        const editModal =
+            document.getElementById(
+                "editServiceModal"
+            );
+
+
+        if (
+            event.target === saleModal
+        ) {
+
+            closeSaleModal();
+
+        }
+
+
+        if (
+            event.target === addModal
+        ) {
+
+            closeServiceModal();
+
+        }
+
+
+        if (
+            event.target === editModal
+        ) {
+
+            closeEditServiceModal();
+
+        }
+
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

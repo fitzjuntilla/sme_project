@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Inventory</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                M
+            </div>
+
+            <div>
+
+                <h2>MILA</h2>
+
+                <span>
+                    Internet Cafe
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a href="{{ url_for('dashboard.dashboard') }}"
+               class="nav-item">
+
+                <span>▣</span>
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('computers.computers') }}"
+               class="nav-item">
+
+                <span>▦</span>
+                Computers
+
+            </a>
+
+
+            <a href="{{ url_for('customers.customers') }}"
+               class="nav-item">
+
+                <span>♙</span>
+                Customers
+
+            </a>
+
+
+            <a href="{{ url_for('services.services') }}"
+               class="nav-item">
+
+                <span>▤</span>
+                Services
+
+            </a>
+
+
+            <a href="{{ url_for('inventory.inventory') }}"
+               class="nav-item active">
+
+                <span>▥</span>
+                Inventory
+
+            </a>
+
+
+           <a href="{{ url_for('transactions.transactions') }}"
+   class="nav-item">
+
+    <span>₱</span>
+
+    Transactions
+
+</a>
+
+
+{% if role == 'Owner' %}
+
+<a href="{{ url_for('reports.reports') }}"
+   class="nav-item">
+
+    <span>▧</span>
+
+    Reports
+
+</a>
+
+
+<a href="{{ url_for('staff.staff') }}"
+   class="nav-item">
+
+    <span>♙</span>
+
+    Manage Staff
+
+</a>
+
+{% endif %}
+
+</nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout">
+
+                <span>↪</span>
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="page-label">
+                    INVENTORY MANAGEMENT
+                </p>
+
+                <h1>
+                    Inventory
+                </h1>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="avatar">
+                    {{ full_name[0] | upper }}
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ full_name }}
+                    </strong>
+
+                    <span>
+                        {{ role }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE INTRO -->
+
+        <section class="welcome">
+
+            <div>
+
+                <h2>
+                    Inventory Records
+                </h2>
+
+                <p>
+                    Manage physical products and supplies used in MILA Internet Cafe.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- INVENTORY PANEL -->
+
+        <section class="panel inventory-panel">
+
+
+            <!-- PANEL HEADER -->
+
+            <div class="inventory-panel-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        INVENTORY ITEMS
+                    </p>
+
+                    <h2>
+                        Product & Supply List
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-inventory-button"
+                    onclick="openInventoryModal()">
+
+                    + Add Item
+
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="inventory-tools">
+
+                <div class="inventory-search">
+
+                    <span>
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="inventorySearch"
+                        placeholder="Search item...">
+
+                </div>
+
+            </div>
+
+
+            <!-- INVENTORY TABLE -->
+
+            <div class="inventory-table-container">
+
+                <table class="inventory-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Item
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Quantity
+                            </th>
+
+                            <th>
+                                Unit
+                            </th>
+
+                            <th>
+                                Minimum
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="inventoryTableBody">
+
+
+                        {% for item in inventory_items %}
+
+                            <tr>
+
+                                <td>
+
+                                    <span class="inventory-id">
+
+                                        {{ item.inventory_id }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        {{ item.item_name }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ item.description or '-' }}
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        {{ item.quantity }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ item.unit }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ item.minimum_stock }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if item.status == 'Available' %}
+
+                                        <span class="inventory-status available">
+                                            Available
+                                        </span>
+
+                                    {% elif item.status == 'Low Stock' %}
+
+                                        <span class="inventory-status low-stock">
+                                            Low Stock
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="inventory-status out-of-stock">
+                                            Out of Stock
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="inventory-actions">
+
+
+                                        <button
+                                            type="button"
+                                            class="edit-inventory-button"
+
+                                            data-id="{{ item.inventory_id }}"
+
+                                            data-name="{{ item.item_name }}"
+
+                                            data-description="{{ item.description or '' }}"
+
+                                            data-quantity="{{ item.quantity }}"
+
+                                            data-unit="{{ item.unit }}"
+
+                                            data-minimum="{{ item.minimum_stock }}"
+
+                                            data-status="{{ item.status }}"
+
+                                            onclick="openEditInventoryModal(this)">
+
+                                            Edit
+
+                                        </button>
+
+
+                                        <form
+                                            action="{{ url_for(
+                                                'inventory.delete_inventory',
+                                                inventory_id=item.inventory_id
+                                            ) }}"
+                                            method="POST"
+
+                                            onsubmit="return confirmDeleteInventory(
+                                                '{{ item.item_name }}'
+                                            );">
+
+                                            <button
+    type="submit"
+    class="delete-inventory-button">
+
+    Deactivate
+
+</button>
+
+                                        </form>
+
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+
+                        {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="8"
+                                    class="empty-inventory">
+
+                                    No inventory items found.
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="inventory-footer">
+
+                <span>
+
+                    Showing
+
+                    <strong>
+                        {{ inventory_items|length }}
+                    </strong>
+
+                    item(s)
+
+                </span>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         ADD INVENTORY MODAL
+         ========================================== -->
+
+    <div
+        id="inventoryModal"
+        class="customer-modal">
+
+        <div class="customer-modal-content">
+
+
+            <div class="customer-modal-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        INVENTORY MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Add Inventory Item
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeInventoryModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <form
+                action="{{ url_for('inventory.add_inventory') }}"
+                method="POST">
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Item Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="item_name"
+                        placeholder="Example: Bond Paper"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <input
+                        type="text"
+                        name="description"
+                        placeholder="Example: Short bond paper for printing">
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        min="0"
+                        step="0.01"
+                        placeholder="0"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Unit
+                    </label>
+
+                    <input
+                        type="text"
+                        name="unit"
+                        placeholder="Example: sheets, pcs, bottles"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Minimum Stock
+                    </label>
+
+                    <input
+                        type="number"
+                        name="minimum_stock"
+                        min="0"
+                        step="0.01"
+                        placeholder="5"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        required>
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+                        <option value="Low Stock">
+                            Low Stock
+                        </option>
+
+                        <option value="Out of Stock">
+                            Out of Stock
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeInventoryModal()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-customer-button">
+
+                        Save Item
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         EDIT INVENTORY MODAL
+         ========================================== -->
+
+    <div
+        id="editInventoryModal"
+        class="customer-modal">
+
+        <div class="customer-modal-content">
+
+
+            <div class="customer-modal-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        INVENTORY MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Edit Inventory Item
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeEditInventoryModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <form
+                id="editInventoryForm"
+                method="POST">
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Item Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editInventoryName"
+                        name="item_name"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editInventoryDescription"
+                        name="description">
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="editInventoryQuantity"
+                        name="quantity"
+                        min="0"
+                        step="0.01"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Unit
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editInventoryUnit"
+                        name="unit"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Minimum Stock
+                    </label>
+
+                    <input
+                        type="number"
+                        id="editInventoryMinimum"
+                        name="minimum_stock"
+                        min="0"
+                        step="0.01"
+                        required>
+
+                </div>
+
+
+                <div class="customer-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        id="editInventoryStatus"
+                        name="status"
+                        required>
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+                        <option value="Low Stock">
+                            Low Stock
+                        </option>
+
+                        <option value="Out of Stock">
+                            Out of Stock
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeEditInventoryModal()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-customer-button">
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <script>
+
+
+        /* ==========================================
+           ADD INVENTORY
+           ========================================== */
+
+        function openInventoryModal() {
+
+            document
+                .getElementById("inventoryModal")
+                .classList.add("show");
+
+        }
+
+
+        function closeInventoryModal() {
+
+            document
+                .getElementById("inventoryModal")
+                .classList.remove("show");
+
+        }
+
+
+        /* ==========================================
+           EDIT INVENTORY
+           ========================================== */
+
+        function openEditInventoryModal(button) {
+
+            const inventoryId =
+                button.dataset.id;
+
+
+            const itemName =
+                button.dataset.name;
+
+
+            const description =
+                button.dataset.description;
+
+
+            const quantity =
+                button.dataset.quantity;
+
+
+            const unit =
+                button.dataset.unit;
+
+
+            const minimumStock =
+                button.dataset.minimum;
+
+
+            const status =
+                button.dataset.status;
+
+
+            document.getElementById(
+                "editInventoryName"
+            ).value = itemName;
+
+
+            document.getElementById(
+                "editInventoryDescription"
+            ).value = description;
+
+
+            document.getElementById(
+                "editInventoryQuantity"
+            ).value = quantity;
+
+
+            document.getElementById(
+                "editInventoryUnit"
+            ).value = unit;
+
+
+            document.getElementById(
+                "editInventoryMinimum"
+            ).value = minimumStock;
+
+
+            document.getElementById(
+                "editInventoryStatus"
+            ).value = status;
+
+
+            document.getElementById(
+                "editInventoryForm"
+            ).action =
+                "/inventory/edit/" + inventoryId;
+
+
+            document.getElementById(
+                "editInventoryModal"
+            ).classList.add("show");
+
+        }
+
+
+        function closeEditInventoryModal() {
+
+            document
+                .getElementById("editInventoryModal")
+                .classList.remove("show");
+
+        }
+
+
+        /* ==========================================
+           DELETE INVENTORY
+           ========================================== */
+
+        function confirmDeleteInventory(itemName) {
+
+            return confirm(
+                "Are you sure you want to delete " +
+                itemName +
+                "?"
+            );
+
+        }
+
+
+        /* ==========================================
+           SEARCH INVENTORY
+           ========================================== */
+
+        const inventorySearch =
+            document.getElementById(
+                "inventorySearch"
+            );
+
+
+        const inventoryTableBody =
+            document.getElementById(
+                "inventoryTableBody"
+            );
+
+
+        inventorySearch.addEventListener(
+            "keyup",
+            function () {
+
+                const searchValue =
+                    this.value
+                        .toLowerCase()
+                        .trim();
+
+
+                const rows =
+                    inventoryTableBody.querySelectorAll(
+                        "tr"
+                    );
+
+
+                rows.forEach(
+                    function (row) {
+
+                        const text =
+                            row.textContent
+                                .toLowerCase();
+
+
+                        if (
+                            text.includes(
+                                searchValue
+                            )
+                        ) {
+
+                            row.style.display = "";
+
+                        } else {
+
+                            row.style.display = "none";
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* ==========================================
+           CLOSE MODALS
+           ========================================== */
+
+        window.addEventListener(
+            "click",
+            function(event) {
+
+                const addModal =
+                    document.getElementById(
+                        "inventoryModal"
+                    );
+
+
+                const editModal =
+                    document.getElementById(
+                        "editInventoryModal"
+                    );
+
+
+                if (
+                    event.target === addModal
+                ) {
+
+                    closeInventoryModal();
+
+                }
+
+
+                if (
+                    event.target === editModal
+                ) {
+
+                    closeEditInventoryModal();
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

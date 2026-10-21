@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MILA Internet Cafe - Manage Staff</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/theme-override.css') }}">
+
+</head>
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                M
+            </div>
+
+            <div>
+
+                <h2>
+                    MILA
+                </h2>
+
+                <span>
+                    Internet Cafe
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+
+            <a href="{{ url_for('dashboard.dashboard') }}"
+               class="nav-item">
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('computers.computers') }}"
+               class="nav-item">
+
+                <span>▦</span>
+
+                Computers
+
+            </a>
+
+
+            <a href="{{ url_for('customers.customers') }}"
+               class="nav-item">
+
+                <span>♙</span>
+
+                Customers
+
+            </a>
+
+
+            <a href="{{ url_for('services.services') }}"
+               class="nav-item">
+
+                <span>▤</span>
+
+                Services
+
+            </a>
+
+
+            <a href="{{ url_for('inventory.inventory') }}"
+               class="nav-item">
+
+                <span>▥</span>
+
+                Inventory
+
+            </a>
+
+
+            <a href="{{ url_for('transactions.transactions') }}"
+               class="nav-item">
+
+                <span>₱</span>
+
+                Transactions
+
+            </a>
+
+
+            <a href="{{ url_for('reports.reports') }}"
+               class="nav-item">
+
+                <span>▧</span>
+
+                Reports
+
+            </a>
+
+
+            <a href="{{ url_for('staff.staff') }}"
+               class="nav-item active">
+
+                <span>♙</span>
+
+                Manage Staff
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="logout">
+
+                <span>↪</span>
+
+                Logout
+
+            </a>
+
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+
+            <div>
+
+                <p class="page-label">
+                    STAFF MANAGEMENT
+                </p>
+
+
+                <h1>
+                    Manage Staff
+                </h1>
+
+            </div>
+
+
+            <div class="user-profile">
+
+
+                <div class="avatar">
+
+                    {{ full_name[0] | upper }}
+
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ full_name }}
+                    </strong>
+
+
+                    <span>
+                        {{ role }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- PAGE INTRO -->
+
+        <section class="welcome">
+
+
+            <div>
+
+                <h2>
+                    Staff Accounts
+                </h2>
+
+
+                <p>
+                    Manage MILA Internet Cafe attendants and staff accounts.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- STAFF PANEL -->
+
+        <section class="panel staff-panel">
+
+
+            <!-- PANEL HEADER -->
+
+            <div class="staff-panel-header">
+
+
+                <div>
+
+                    <p class="panel-label">
+                        REGISTERED STAFF
+                    </p>
+
+
+                    <h2>
+                        Staff List
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-staff-button"
+                    onclick="openStaffModal()">
+
+                    + Add Attendant
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- STAFF TABLE -->
+
+            <div class="staff-table-container">
+
+
+                <table class="staff-table">
+
+
+                    <thead>
+
+
+                        <tr>
+
+
+                            <th>
+                                ID
+                            </th>
+
+
+                            <th>
+                                Staff Name
+                            </th>
+
+
+                            <th>
+                                Username
+                            </th>
+
+
+                            <th>
+                                Role
+                            </th>
+
+                            <th>
+                            Status
+                            </th>
+
+
+                            <th>
+                                Registered
+                            </th>
+
+                            <th>
+                              Actions
+                            </th>
+
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                        {% for staff in staff_members %}
+
+
+                            <tr>
+
+
+                                <td>
+
+                                    <span class="staff-id">
+
+                                        {{ staff.user_id }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+
+                                    <div class="staff-name-cell">
+
+
+                                        <div class="staff-avatar">
+
+                                            {{ staff.full_name[0] | upper }}
+
+                                        </div>
+
+
+                                        <strong>
+
+                                            {{ staff.full_name }}
+
+                                        </strong>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ staff.username }}
+
+                                </td>
+
+
+                                <td>
+
+    {% if staff.role == 'Owner' %}
+
+        <span class="staff-role owner">
+
+            Owner
+
+        </span>
+
+    {% else %}
+
+        <span class="staff-role attendant">
+
+            Attendant
+
+        </span>
+
+    {% endif %}
+
+</td>
+
+
+<td>
+
+    {% if staff.status == 'Active' %}
+
+        <span class="staff-status active">
+
+            Active
+
+        </span>
+
+    {% else %}
+
+        <span class="staff-status inactive">
+
+            Inactive
+
+        </span>
+
+    {% endif %}
+
+</td>
+
+
+<td>
+
+
+                                    {% if staff.created_at %}
+
+                                        {{ staff.created_at.strftime(
+                                            '%b %d, %Y'
+                                        ) }}
+
+                                    {% else %}
+
+                                        -
+
+                                    {% endif %}
+
+
+                                </td>
+
+                               <td>
+
+    {% if staff.role == 'Attendant' %}
+
+        {% if staff.status == 'Active' %}
+
+            <form
+                action="{{ url_for(
+                    'staff.deactivate_staff',
+                    user_id=staff.user_id
+                ) }}"
+                method="POST"
+                onsubmit="return confirm(
+                    'Are you sure you want to deactivate ' +
+                    '{{ staff.full_name }}?'
+                );">
+
+                <button
+                    type="submit"
+                    class="deactivate-staff-button">
+
+                    Deactivate
+
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <form
+                action="{{ url_for(
+                    'staff.activate_staff',
+                    user_id=staff.user_id
+                ) }}"
+                method="POST"
+                onsubmit="return confirm(
+                    'Are you sure you want to activate ' +
+                    '{{ staff.full_name }}?'
+                );">
+
+                <button
+                    type="submit"
+                    class="activate-staff-button">
+
+                    Activate
+
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    {% else %}
+
+        <span class="owner-protected-label">
+
+            Protected
+
+        </span>
+
+    {% endif %}
+
+</td>
+
+
+                            </tr>
+
+
+                        {% else %}
+
+
+                            <tr>
+
+
+                                <td
+                                    colspan="7"
+                                    class="empty-staff">
+
+                                    No staff accounts found.
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+
+            <!-- STAFF COUNT -->
+
+            <div class="staff-footer">
+
+
+                <span>
+
+                    Showing
+
+                    <strong>
+                        {{ staff_members|length }}
+                    </strong>
+
+                    staff account(s)
+
+                </span>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ADD ATTENDANT MODAL -->
+
+    <div
+        id="staffModal"
+        class="staff-modal">
+
+
+        <div class="staff-modal-content">
+
+
+            <div class="staff-modal-header">
+
+
+                <div>
+
+                    <p class="panel-label">
+                        STAFF MANAGEMENT
+                    </p>
+
+
+                    <h2>
+                        Add Attendant
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeStaffModal()">
+
+                    ×
+
+                </button>
+
+
+            </div>
+
+
+
+            <form
+                action="{{ url_for('staff.add_staff') }}"
+                method="POST">
+
+
+                <div class="staff-form-group">
+
+
+                    <label>
+                        Full Name
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="full_name"
+                        placeholder="Enter full name"
+                        required>
+
+
+                </div>
+
+
+
+                <div class="staff-form-group">
+
+
+                    <label>
+                        Username
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter username"
+                        required>
+
+
+                </div>
+
+
+
+                <div class="staff-form-group">
+
+
+                    <label>
+                        Password
+                    </label>
+
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required>
+
+
+                </div>
+
+
+
+                <div class="staff-form-group">
+
+
+                    <label>
+                        Confirm Password
+                    </label>
+
+
+                    <input
+                        type="password"
+                        name="confirm_password"
+                        placeholder="Confirm password"
+                        required>
+
+
+                </div>
+
+
+
+                <div class="modal-actions">
+
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeStaffModal()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-staff-button">
+
+                        Create Attendant
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- MODAL SCRIPT -->
+
+    <script>
+
+
+        function openStaffModal() {
+
+            document
+                .getElementById("staffModal")
+                .classList.add("show");
+
+        }
+
+
+        function closeStaffModal() {
+
+            document
+                .getElementById("staffModal")
+                .classList.remove("show");
+
+        }
+
+
+        window.onclick = function(event) {
+
+            const modal =
+                document.getElementById(
+                    "staffModal"
+                );
+
+
+            if (event.target === modal) {
+
+                closeStaffModal();
+
+            }
+
+        };
+
+
+    </script>
+
+
+</body>
+
+</html>
